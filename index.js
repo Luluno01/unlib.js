@@ -4,11 +4,13 @@ var Generators_1 = require("./Generators");
 var Random_1 = require("./Random");
 var Constants_1 = require("./Constants");
 var Binary_1 = require("./Binary");
+var Timer_1 = require("./Timer");
 var _default = {
     Random: Random_1.Random,
     Generators: Generators_1.Generators,
     Constants: Constants_1.Constants,
-    Binary: Binary_1.Binary
+    Binary: Binary_1.Binary,
+    Timer: Timer_1.Timer
 };
 exports.default = _default;
 try {

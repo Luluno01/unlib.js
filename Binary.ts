@@ -45,7 +45,7 @@ export namespace Binary {
     private mask: number = 255
 
     /**
-     * @description Constructor of `Binary`
+     * @description Constructor of `Binary`.
      * @param value True value of the `Binary` object (unsigned).
      * @param size Size of this `Binary` object in bits. No larger than the size of `number`.
      */

@@ -2,12 +2,14 @@ import { Generators } from './Generators'
 import { Random } from './Random'
 import { Constants } from './Constants'
 import { Binary } from './Binary'
+import { Timer } from './Timer'
 
 var _default = {
   Random,
   Generators,
   Constants,
-  Binary
+  Binary,
+  Timer
 }
 
 export default _default
