@@ -2,6 +2,22 @@
 
 Untitled's personal JavaScript library. Still under construction.
 
+## Table of Contents
+
+- [unlib.js](#unlibjs)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Usage](#usage)
+    - [Pure JavaScript](#pure-javascript)
+    - [TypeScript/ES6](#typescript-es6)
+  - [Features (extending)](#features-extending)
+    - [`Random`](#random)
+    - [`Generators`](#generators)
+    - [`Binary`](#binary)
+    - [`Timer`](#timer)
+    - [`Constants`](#constants)
+  - [TODO](#todo)
+
 ## Description
 
 A JavaScript library for personal use and learning. Written in [TypeScript](www.typescriptlang.org) (I am a newbie at TypeScript). This library contains several functions and classes which implement some easy-to-understand but non-easy-to-realize functions and mechanisms.
