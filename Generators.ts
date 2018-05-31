@@ -31,6 +31,14 @@ export namespace Generators {
   }
 
   /**
+   * @description Combine all the generators passed as parameters into a new generator.
+   * @param ranges Range generators to combine together.
+   */
+  export function *newRange(...ranges: Array<IterableIterator<number | string>>) {
+    for(let range of ranges) yield* range
+  }
+
+  /**
    * @description A generator that generates a random sequence whose items are chosen from `arr`.
    * @param arr An array of candidates or a generator.
    * @param length The length of generated sequence.

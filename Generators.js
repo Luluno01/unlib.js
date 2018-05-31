@@ -26,6 +26,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Random_1 = require("./Random");
 var Generators;
@@ -91,6 +101,36 @@ var Generators;
         });
     }
     Generators.charRange = charRange;
+    /**
+     * @description Combine all the generators passed as parameters into a new generator.
+     * @param ranges Range generators to combine together.
+     */
+    function newRange() {
+        var ranges = [];
+        for (_i = 0; _i < arguments.length; _i++) {
+            ranges[_i] = arguments[_i];
+        }
+        var _i, _c, ranges_1, range_1;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    _c = 0, ranges_1 = ranges;
+                    _d.label = 1;
+                case 1:
+                    if (!(_c < ranges_1.length)) return [3 /*break*/, 4];
+                    range_1 = ranges_1[_c];
+                    return [5 /*yield**/, __values(range_1)];
+                case 2:
+                    _d.sent();
+                    _d.label = 3;
+                case 3:
+                    _c++;
+                    return [3 /*break*/, 1];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }
+    Generators.newRange = newRange;
     /**
      * @description A generator that generates a random sequence whose items are chosen from `arr`.
      * @param arr An array of candidates or a generator.
