@@ -1,4 +1,24 @@
 "use strict";
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Constants_1 = require("./Constants");
 var Generators_1 = require("./Generators");
@@ -20,7 +40,7 @@ var Random;
      */
     function random(a, b) {
         if (b == undefined) {
-            _a = [0, a], a = _a[0], b = _a[1];
+            _a = __read([0, a], 2), a = _a[0], b = _a[1];
         }
         return Math.random() * (b - a) + a;
         var _a;
@@ -62,7 +82,7 @@ var Random;
         else {
             var res = [];
             while (res.length < count && arr.length) {
-                res.push.apply(res, arr.splice(Random.randint(arr.length), 1));
+                res.push.apply(res, __spread(arr.splice(Random.randint(arr.length), 1)));
             }
             return res;
         }
@@ -77,7 +97,7 @@ var Random;
     function shuffle(arr, protect) {
         var res = Random.sample(arr, arr.length, protect);
         if (!protect) {
-            arr.push.apply(arr, res);
+            arr.push.apply(arr, __spread(res));
         }
         return res;
     }

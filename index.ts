@@ -3,13 +3,17 @@ import { Random } from './Random'
 import { Constants } from './Constants'
 import { Binary } from './Binary'
 import { Timer } from './Timer'
+import { Prom as Promise } from './Prom'
+import { fs } from './fs'
 
 var _default = {
   Random,
   Generators,
   Constants,
   Binary,
-  Timer
+  Timer,
+  Promise,
+  fs
 }
 
 export default _default

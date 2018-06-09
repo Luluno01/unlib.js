@@ -26,6 +26,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __values = (this && this.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
     if (m) return m.call(o);
@@ -53,7 +69,7 @@ var Generators;
             switch (_d.label) {
                 case 0:
                     if (b == undefined) {
-                        _c = [0, a], a = _c[0], b = _c[1];
+                        _c = __read([0, a], 2), a = _c[0], b = _c[1];
                     }
                     i = a;
                     _d.label = 1;
@@ -110,23 +126,35 @@ var Generators;
         for (_i = 0; _i < arguments.length; _i++) {
             ranges[_i] = arguments[_i];
         }
-        var _i, _c, ranges_1, range_1;
+        var _i, ranges_1, ranges_1_1, range_1, e_1_1, e_1, _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _c = 0, ranges_1 = ranges;
+                    _d.trys.push([0, 5, 6, 7]);
+                    ranges_1 = __values(ranges), ranges_1_1 = ranges_1.next();
                     _d.label = 1;
                 case 1:
-                    if (!(_c < ranges_1.length)) return [3 /*break*/, 4];
-                    range_1 = ranges_1[_c];
+                    if (!!ranges_1_1.done) return [3 /*break*/, 4];
+                    range_1 = ranges_1_1.value;
                     return [5 /*yield**/, __values(range_1)];
                 case 2:
                     _d.sent();
                     _d.label = 3;
                 case 3:
-                    _c++;
+                    ranges_1_1 = ranges_1.next();
                     return [3 /*break*/, 1];
-                case 4: return [2 /*return*/];
+                case 4: return [3 /*break*/, 7];
+                case 5:
+                    e_1_1 = _d.sent();
+                    e_1 = { error: e_1_1 };
+                    return [3 /*break*/, 7];
+                case 6:
+                    try {
+                        if (ranges_1_1 && !ranges_1_1.done && (_c = ranges_1.return)) _c.call(ranges_1);
+                    }
+                    finally { if (e_1) throw e_1.error; }
+                    return [7 /*endfinally*/];
+                case 7: return [2 /*return*/];
             }
         });
     }
