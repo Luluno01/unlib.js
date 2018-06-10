@@ -63,11 +63,11 @@ var Generators;
      * @param step Optional. Defaults to 1. Step.
      */
     function range(a, b, step) {
-        if (step === void 0) { step = 1; }
-        var i, _c;
+        var _c, i;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
+                    if (step === void 0) { step = 1; }
                     if (b == undefined) {
                         _c = __read([0, a], 2), a = _c[0], b = _c[1];
                     }
@@ -94,8 +94,8 @@ var Generators;
      * @param step Optional. Defaults to 1. Step.
      */
     function charRange(a, b, step) {
-        if (step === void 0) { step = 1; }
         var _a, _b, i;
+        if (step === void 0) { step = 1; }
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -122,39 +122,41 @@ var Generators;
      * @param ranges Range generators to combine together.
      */
     function newRange() {
-        var ranges = [];
-        for (_i = 0; _i < arguments.length; _i++) {
-            ranges[_i] = arguments[_i];
-        }
-        var _i, ranges_1, ranges_1_1, range_1, e_1_1, e_1, _c;
+        var e_1, _c, _i, ranges_1, ranges_1_1, range_1, e_1_1;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _d.trys.push([0, 5, 6, 7]);
-                    ranges_1 = __values(ranges), ranges_1_1 = ranges_1.next();
+                    var ranges = [];
+                    for (_i = 0; _i < arguments.length; _i++) {
+                        ranges[_i] = arguments[_i];
+                    }
                     _d.label = 1;
                 case 1:
-                    if (!!ranges_1_1.done) return [3 /*break*/, 4];
+                    _d.trys.push([1, 6, 7, 8]);
+                    ranges_1 = __values(ranges), ranges_1_1 = ranges_1.next();
+                    _d.label = 2;
+                case 2:
+                    if (!!ranges_1_1.done) return [3 /*break*/, 5];
                     range_1 = ranges_1_1.value;
                     return [5 /*yield**/, __values(range_1)];
-                case 2:
-                    _d.sent();
-                    _d.label = 3;
                 case 3:
+                    _d.sent();
+                    _d.label = 4;
+                case 4:
                     ranges_1_1 = ranges_1.next();
-                    return [3 /*break*/, 1];
-                case 4: return [3 /*break*/, 7];
-                case 5:
+                    return [3 /*break*/, 2];
+                case 5: return [3 /*break*/, 8];
+                case 6:
                     e_1_1 = _d.sent();
                     e_1 = { error: e_1_1 };
-                    return [3 /*break*/, 7];
-                case 6:
+                    return [3 /*break*/, 8];
+                case 7:
                     try {
                         if (ranges_1_1 && !ranges_1_1.done && (_c = ranges_1.return)) _c.call(ranges_1);
                     }
                     finally { if (e_1) throw e_1.error; }
                     return [7 /*endfinally*/];
-                case 7: return [2 /*return*/];
+                case 8: return [2 /*return*/];
             }
         });
     }
@@ -175,7 +177,7 @@ var Generators;
                     _c.label = 1;
                 case 1:
                     if (!(i < length)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, arr[Random_1.Random.randint(arr.length)]];
+                    return [4 /*yield*/, arr[Random_1.default.randint(arr.length)]];
                 case 2:
                     _c.sent();
                     _c.label = 3;
@@ -187,4 +189,12 @@ var Generators;
         });
     }
     Generators.randSeq = randSeq;
-})(Generators = exports.Generators || (exports.Generators = {}));
+})(Generators || (Generators = {}));
+exports.default = Generators;
+try {
+    // Object.assign(module.exports, _default)
+    for (var key in Generators)
+        module.exports[key] = Generators[key];
+}
+catch (_c) {
+}

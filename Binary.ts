@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 
-export namespace Binary {
+namespace Binary {
   /**
    * @description Left rotate `num` for `times` times.
    * @param size Size of `num` in bits
@@ -229,4 +229,13 @@ export namespace Binary {
       return this.value.toString(...args)
     }
   }
+}
+
+export default Binary
+
+declare var module: any
+try {
+  // Object.assign(module.exports, _default)
+  for(var key in Binary) module.exports[key] = Binary[key]
+} catch {
 }

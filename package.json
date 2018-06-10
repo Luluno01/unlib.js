@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc index.ts -t es5 --lib esnext --downlevelIteration",
-    "build6": "tsc index.ts -t es6 --lib esnext"
+    "build": "tsc index.ts -t es5 --lib esnext --downlevelIteration -d",
+    "build6": "tsc index.ts -t es6 --lib esnext -d"
   },
   "keywords": [
     "lib",
@@ -15,6 +15,6 @@
   "author": "Untitled",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^10.0.4"
+    "@types/node": "^10.3.2"
   }
 }

@@ -69,6 +69,7 @@ var Prom;
      * @returns {Object} Promisified object.
      */
     function promisifyAll(obj, candidates, promisify) {
+        var e_1, _a;
         if (candidates === void 0) { candidates = Object.keys(obj); }
         if (promisify === void 0) { promisify = Prom.promisify; }
         var res = {};
@@ -86,7 +87,14 @@ var Prom;
             finally { if (e_1) throw e_1.error; }
         }
         return res;
-        var e_1, _a;
     }
     Prom.promisifyAll = promisifyAll;
-})(Prom = exports.Prom || (exports.Prom = {}));
+})(Prom || (Prom = {}));
+exports.default = Prom;
+try {
+    // Object.assign(module.exports, _default)
+    for (var key in Prom)
+        module.exports[key] = Prom[key];
+}
+catch (_a) {
+}

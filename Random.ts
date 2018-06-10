@@ -1,8 +1,8 @@
-import { Constants } from './Constants'
-import { Generators } from './Generators'
+import Constants from './Constants'
+import Generators from './Generators'
 
 
-export namespace Random {
+namespace Random {
   /**
    * @description Same as `Math random`.
    * @returns {number} Same as `Math.random`.
@@ -96,4 +96,13 @@ export namespace Random {
   export function randStr(arr: any = Constants.VISIBLE_ASCII_CHAR, length: number): string {
     return Array.from(Generators.randSeq(arr, length)).join('')
   }
+}
+
+export default Random
+
+declare var module: any
+try {
+  // Object.assign(module.exports, _default)
+  for(var key in Random) module.exports[key] = Random[key]
+} catch {
 }

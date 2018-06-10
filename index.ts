@@ -1,26 +1,26 @@
-import { Generators } from './Generators'
-import { Random } from './Random'
-import { Constants } from './Constants'
-import { Binary } from './Binary'
-import { Timer } from './Timer'
-import { Prom as Promise } from './Prom'
-import { fs } from './fs'
+import Generators from './Generators'
+import Random from './Random'
+import Constants from './Constants'
+import Binary from './Binary'
+import Time from './Time'
+import Promise from './Prom'
+import * as fs from './fs'
 
-var _default = {
+var unlib = {
   Random,
   Generators,
   Constants,
   Binary,
-  Timer,
+  Time,
   Promise,
-  fs
+  fs: fs.default
 }
 
-export default _default
+export default unlib
 
 declare var module: any
 try {
   // Object.assign(module.exports, _default)
-  for(var key in _default) module.exports[key] = _default[key]
+  for(var key in unlib) module.exports[key] = unlib[key]
 } catch {
 }

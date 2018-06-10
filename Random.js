@@ -39,11 +39,11 @@ var Random;
      * @returns {number} Generated floating-point number.
      */
     function random(a, b) {
+        var _a;
         if (b == undefined) {
             _a = __read([0, a], 2), a = _a[0], b = _a[1];
         }
         return Math.random() * (b - a) + a;
-        var _a;
     }
     Random.random = random;
     /**
@@ -109,7 +109,7 @@ var Random;
      * @returns {any[]} Generated sequence.
      */
     function randSeq(arr, length) {
-        return Array.from(Generators_1.Generators.randSeq(arr, length));
+        return Array.from(Generators_1.default.randSeq(arr, length));
     }
     Random.randSeq = randSeq;
     /**
@@ -118,8 +118,16 @@ var Random;
      * @param length The length of generated string.
      */
     function randStr(arr, length) {
-        if (arr === void 0) { arr = Constants_1.Constants.VISIBLE_ASCII_CHAR; }
-        return Array.from(Generators_1.Generators.randSeq(arr, length)).join('');
+        if (arr === void 0) { arr = Constants_1.default.VISIBLE_ASCII_CHAR; }
+        return Array.from(Generators_1.default.randSeq(arr, length)).join('');
     }
     Random.randStr = randStr;
-})(Random = exports.Random || (exports.Random = {}));
+})(Random || (Random = {}));
+exports.default = Random;
+try {
+    // Object.assign(module.exports, _default)
+    for (var key in Random)
+        module.exports[key] = Random[key];
+}
+catch (_a) {
+}

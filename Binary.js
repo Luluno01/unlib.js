@@ -251,14 +251,22 @@ var Binary;
          * @returns {stirng}
          */
         Binary.prototype.toString = function () {
+            var _a;
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i] = arguments[_i];
             }
             return (_a = this.value).toString.apply(_a, __spread(args));
-            var _a;
         };
         return Binary;
     }());
     Binary_1.Binary = Binary;
-})(Binary = exports.Binary || (exports.Binary = {}));
+})(Binary || (Binary = {}));
+exports.default = Binary;
+try {
+    // Object.assign(module.exports, _default)
+    for (var key in Binary)
+        module.exports[key] = Binary[key];
+}
+catch (_a) {
+}

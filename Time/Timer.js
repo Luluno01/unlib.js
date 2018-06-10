@@ -77,7 +77,7 @@ var Timer = /** @class */ (function () {
             return;
         clearInterval(this.int);
         this.int = null;
-        if (this.pauseTime > 0) {
+        if (this.pauseTime > 0) { // Pause -> stop
             this.duration = this.pauseTime - this.startTime;
         }
         else {

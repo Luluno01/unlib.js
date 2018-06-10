@@ -1,10 +1,35 @@
 "use strict";
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var e_1, _a;
 var Prom_1 = require("./Prom");
 var _fs = require("fs");
 var path = require("path");
 var util = require("util");
-var pfs = Prom_1.Prom.promisifyAll(_fs, Object.keys(_fs), util.promisify);
+var pfs = Prom_1.default.promisifyAll(_fs, Object.keys(_fs), util.promisify);
+var exceptions = ['Stats', 'watch', 'watchFile', 'unwatchFile', 'createReadStream', 'ReadStream', 'FileReadStream', 'createWriteStream', 'WriteStream', 'FileWriteStream'];
+try {
+    for (var exceptions_1 = __values(exceptions), exceptions_1_1 = exceptions_1.next(); !exceptions_1_1.done; exceptions_1_1 = exceptions_1.next()) {
+        var property = exceptions_1_1.value;
+        pfs[property] = _fs[property];
+    }
+}
+catch (e_1_1) { e_1 = { error: e_1_1 }; }
+finally {
+    try {
+        if (exceptions_1_1 && !exceptions_1_1.done && (_a = exceptions_1.return)) _a.call(exceptions_1);
+    }
+    finally { if (e_1) throw e_1.error; }
+}
 /**
  * @description Make a directory recursively.
  * @param dirname Path to target directory.
@@ -72,7 +97,7 @@ function rm(filename) {
                     return pfs.rmdir(filename);
                 });
             }
-            else {
+            else { // `unlink` directly
                 // console.log('I\'m going to delete the file: ' + filename);
                 return pfs.unlink(filename);
             }
@@ -82,4 +107,10 @@ function rm(filename) {
     });
 }
 pfs.rm = rm;
-exports.fs = pfs;
+exports.default = pfs;
+try {
+    for (var key in pfs)
+        module.exports[key] = pfs[key];
+}
+catch (_b) {
+}

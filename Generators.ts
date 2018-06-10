@@ -1,6 +1,6 @@
-import { Random } from './Random'
+import Random from './Random'
 
-export namespace Generators {
+namespace Generators {
   /**
    * @description A generator that generates a sequence ranged [`a`, `b`) at a pace of `step` per step.
    * @param a The lower bound.
@@ -49,4 +49,13 @@ export namespace Generators {
       yield arr[Random.randint(arr.length)]
     }
   }
+}
+
+export default Generators
+
+declare var module: any
+try {
+  // Object.assign(module.exports, _default)
+  for(var key in Generators) module.exports[key] = Generators[key]
+} catch {
 }
