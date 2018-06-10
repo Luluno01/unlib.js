@@ -10,11 +10,18 @@ Untitled's personal JavaScript library. Still under construction.
   - [Usage](#usage)
     - [Pure JavaScript](#pure-javascript)
     - [TypeScript/ES6](#typescript-es6)
+    - [Import a sub-module](#import-a-sub-module)
   - [Features (extending)](#features-extending)
     - [`Random`](#random)
     - [`Generators`](#generators)
     - [`Binary`](#binary)
-    - [`Timer`](#timer)
+    - [`Time`](#time)
+      - [`Timer`](#timer)
+      - [`sleep`](#sleep)
+    - [`Promise`](#promise)
+    - [`fs`](#fs)
+      - [`mkdirs`](#mkdirs)
+      - [`rm`](#rm)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -37,7 +44,7 @@ const unlib = require('./unlib.js');
 or
 
 ```JavaScript
-const { Random, Generatos, Binary, Timer, Constants } = require('./unlib.js');
+const { Random, Generators, Binary, Time, Promise, fs, Constants } = require('./unlib.js');
 ```
 
 or
@@ -46,18 +53,40 @@ or
 
 ```TypeScript
 import * as unlib from './unlib.js'
+
+console.log(unlib.Random.randint(1, 101))
 ```
 
 or
 
 ```TypeScript
-import { Random, Generatos, Binary, Timer, Constants } from './unlib.js'
+import { Random, Generators, Binary, Time, Promise, fs, Constants } from './unlib.js'
+
+console.log(Random.randint(1, 101))
 ```
 
 or
 
 ```TypeScript
 import unlib from './unlib.js'
+
+console.log(unlib.Random.randint(1, 101))
+```
+
+### Import a sub-module
+
+Just simply `require` or `import-from` `'./unlib.js/sub-module'`.
+
+e.g. Import the module `Random`:
+
+```JavaScript
+const Random = require('./unlib.js/Random')
+```
+
+or
+
+```TypeScript
+import Random from './unlib.js/Random'
 ```
 
 ## Features (extending)
@@ -78,9 +107,33 @@ Some generators/iterators including `range` and `charRange`, as well as a genera
 
 Some functions and classes for binary processing (circular shifting, complement, etc.)
 
-### `Timer`
+### `Time`
+
+Sub-module `Time` including `sleep` and `Timer`.
+
+#### `Timer`
 
 A timer class that calls your callback function at specified interval with an optional max timing duration.
+
+#### `sleep`
+
+Promise version of `setTimeout`.
+
+### `Promise`
+
+Some promisify functions.
+
+### `fs`
+
+Promise version of built-in object `fs` as well as some promisified custom functions.
+
+#### `mkdirs`
+
+Make a directory recursively.
+
+#### `rm`
+
+Remove a file or directory recursively.
 
 ### `Constants`
 
