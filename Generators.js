@@ -167,17 +167,17 @@ var Generators;
      * @param length The length of generated sequence.
      */
     function randSeq(arr, length) {
-        var i;
+        var _arr, i;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    if (arr.next && arr[Symbol.iterator])
-                        arr = Array.from(arr); // [...arr]
+                    if ('next' in arr && arr.next && arr[Symbol.iterator])
+                        _arr = Array.from(arr); // [...arr]
                     i = 0;
                     _c.label = 1;
                 case 1:
                     if (!(i < length)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, arr[Random_1.default.randint(arr.length)]];
+                    return [4 /*yield*/, arr[Random_1.default.randint(_arr.length)]];
                 case 2:
                     _c.sent();
                     _c.label = 3;
@@ -189,6 +189,47 @@ var Generators;
         });
     }
     Generators.randSeq = randSeq;
+    /**
+     * @description Generator version of `Random.elect`.
+     * @param candidates Candidates for the election.
+     * @param maxVotes Max votes to win.
+     */
+    function elect(candidates, maxVotes) {
+        var e_2, _c, candidates_1, candidates_1_1, candidate;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    candidates.forEach(function (candidate) { return candidate.votes = 0; });
+                    _d.label = 1;
+                case 1:
+                    if (!true) return [3 /*break*/, 3];
+                    try {
+                        for (candidates_1 = __values(candidates), candidates_1_1 = candidates_1.next(); !candidates_1_1.done; candidates_1_1 = candidates_1.next()) {
+                            candidate = candidates_1_1.value;
+                            if (candidate.votes >= maxVotes)
+                                return [2 /*return*/];
+                        }
+                    }
+                    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                    finally {
+                        try {
+                            if (candidates_1_1 && !candidates_1_1.done && (_c = candidates_1.return)) _c.call(candidates_1);
+                        }
+                        finally { if (e_2) throw e_2.error; }
+                    }
+                    // let voteFor = Random.vote(candidates)
+                    // yield { voteFor: candidates[voteFor], index: voteFor }
+                    return [4 /*yield*/, candidates[Random_1.default.vote(candidates)]];
+                case 2:
+                    // let voteFor = Random.vote(candidates)
+                    // yield { voteFor: candidates[voteFor], index: voteFor }
+                    _d.sent();
+                    return [3 /*break*/, 1];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }
+    Generators.elect = elect;
 })(Generators || (Generators = {}));
 exports.default = Generators;
 try {

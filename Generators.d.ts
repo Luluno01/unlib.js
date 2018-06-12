@@ -1,3 +1,4 @@
+import Random from './Random';
 declare namespace Generators {
     /**
      * @description A generator that generates a sequence ranged [`a`, `b`) at a pace of `step` per step.
@@ -17,12 +18,18 @@ declare namespace Generators {
      * @description Combine all the generators passed as parameters into a new generator.
      * @param ranges Range generators to combine together.
      */
-    function newRange(...ranges: Array<IterableIterator<number | string>>): IterableIterator<string | number>;
+    function newRange<T>(...ranges: Array<IterableIterator<T>>): IterableIterator<T>;
     /**
      * @description A generator that generates a random sequence whose items are chosen from `arr`.
      * @param arr An array of candidates or a generator.
      * @param length The length of generated sequence.
      */
-    function randSeq(arr: any, length: number): IterableIterator<any>;
+    function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): IterableIterator<any>;
+    /**
+     * @description Generator version of `Random.elect`.
+     * @param candidates Candidates for the election.
+     * @param maxVotes Max votes to win.
+     */
+    function elect(candidates: Array<Random.Candidate>, maxVotes: number): IterableIterator<Random.Candidate>;
 }
 export default Generators;

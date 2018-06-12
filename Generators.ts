@@ -34,7 +34,7 @@ namespace Generators {
    * @description Combine all the generators passed as parameters into a new generator.
    * @param ranges Range generators to combine together.
    */
-  export function *newRange(...ranges: Array<IterableIterator<number | string>>) {
+  export function *newRange<T>(...ranges: Array<IterableIterator<T>>) {
     for(let range of ranges) yield* range
   }
 
@@ -43,10 +43,28 @@ namespace Generators {
    * @param arr An array of candidates or a generator.
    * @param length The length of generated sequence.
    */
-  export function *randSeq(arr: any, length: number) {
-    if(arr.next && arr[Symbol.iterator]) arr = Array.from(arr)  // [...arr]
+  export function *randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number) {
+    let _arr: Array<T>
+    if('next' in arr && arr.next && arr[Symbol.iterator]) _arr = Array.from(arr)  // [...arr]
     for(let i = 0; i < length; i++) {
-      yield arr[Random.randint(arr.length)]
+      yield arr[Random.randint(_arr.length)]
+    }
+  }
+
+  /**
+   * @description Generator version of `Random.elect` which is, once again, somehow, a useless function.
+   * @param candidates Candidates for the election.
+   * @param maxVotes Max votes to win.
+   */
+  export function *elect(candidates: Array<Random.Candidate>, maxVotes: number) {
+    candidates.forEach(candidate => candidate.votes = 0)
+    while(true) {
+      for(let candidate of candidates) {
+        if(candidate.votes >= maxVotes) return
+      }
+      // let voteFor = Random.vote(candidates)
+      // yield { voteFor: candidates[voteFor], index: voteFor }
+      yield candidates[Random.vote(candidates)]
     }
   }
 }

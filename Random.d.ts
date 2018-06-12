@@ -3,7 +3,7 @@ declare namespace Random {
      * @description Same as `Math random`.
      * @returns {number} Same as `Math.random`.
      */
-    function rand(): number;
+    const rand: () => number;
     /**
      * @description Generate a **floating-point** number randomly ranged [`a`, `b`), or [0, `a`) if `b` is undefined.
      * @param a The lower bound of the generated number.
@@ -23,28 +23,48 @@ declare namespace Random {
      * @param arr The population to sample.
      * @param count The expected number of samples.
      * @param protect Optional. Defaults to `false`. Whether to protect `arr` during sampling. If false, `arr.splice` will be used.
-     * @returns {any[]} An array of resulted samples.
+     * @returns {Array<T>} An array of resulted samples.
      */
-    function sample(arr: Array<any>, count: number, protect?: boolean): Array<any>;
+    function sample<T>(arr: Array<T>, count: number, protect?: boolean): Array<T>;
     /**
      * @description Shuffle the items in the array given.
      * @param arr The array with items to shuffle.
      * @param protect Optional. Defaults to false. Whether to protect `arr` during shuffle.
-     * @returns {any[]} The array that has been shuffled.
+     * @returns {Array<T>} The array that has been shuffled.
      */
-    function shuffle(arr: Array<any>, protect?: boolean): Array<any>;
+    function shuffle<T>(arr: Array<T>, protect?: boolean): Array<T>;
     /**
      * @description Generate a random sequence whose items are chosen from `arr`.
      * @param arr An array of candidates or a generator.
      * @param length The length of generated sequence.
-     * @returns {any[]} Generated sequence.
+     * @returns {Array<T>} Generated sequence.
      */
-    function randSeq(arr: any, length: number): any[];
+    function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): Array<T>;
     /**
      * @description Generate a random string whose characters are chosen from `arr`.
      * @param arr A candidate string or an array of candidates string or a generator.
      * @param length The length of generated string.
+     * @returns {string} Generated string.
      */
-    function randStr(arr: any, length: number): string;
+    function randStr(arr: ArrayLike<string> | IterableIterator<string>, length: number): string;
+    interface Candidate extends Object {
+        votes: number;
+    }
+    interface ElectResult {
+        winner: Candidate;
+        records: Array<number>;
+    }
+    /**
+     * @description A useless function that simulates a single vote.
+     * @param candidates Candidates to vote for.
+     * @returns The index of candidate being voted.
+     */
+    function vote(candidates: Array<Candidate>): number;
+    /**
+     * @description A useless function that simulates an election.
+     * @param candidates Candidates for the election.
+     * @param maxVotes Max votes to win.
+     */
+    function elect(candidates: Array<Candidate>, maxVotes: number): ElectResult;
 }
 export default Random;

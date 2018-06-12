@@ -1,5 +1,6 @@
 import Constants from './Constants'
 import Generators from './Generators'
+import * as assert from 'assert'
 
 
 namespace Random {
@@ -7,9 +8,7 @@ namespace Random {
    * @description Same as `Math random`.
    * @returns {number} Same as `Math.random`.
    */
-  export function rand(): number {
-    return Math.random()
-  }
+  export const rand: () => number = Math.random
 
   /**
    * @description Generate a **floating-point** number randomly ranged [`a`, `b`), or [0, `a`) if `b` is undefined.
@@ -39,9 +38,9 @@ namespace Random {
    * @param arr The population to sample.
    * @param count The expected number of samples.
    * @param protect Optional. Defaults to `false`. Whether to protect `arr` during sampling. If false, `arr.splice` will be used.
-   * @returns {any[]} An array of resulted samples.
+   * @returns {Array<T>} An array of resulted samples.
    */
-  export function sample(arr: Array<any>, count: number, protect?: boolean): Array<any> {
+  export function sample<T>(arr: Array<T>, count: number, protect?: boolean): Array<T> {
     if(protect) {
       let indexes = []
       for(let i = 0; i < arr.length; i++) {
@@ -68,9 +67,9 @@ namespace Random {
    * @description Shuffle the items in the array given.
    * @param arr The array with items to shuffle.
    * @param protect Optional. Defaults to false. Whether to protect `arr` during shuffle.
-   * @returns {any[]} The array that has been shuffled.
+   * @returns {Array<T>} The array that has been shuffled.
    */
-  export function shuffle(arr: Array<any>, protect?: boolean): Array<any> {
+  export function shuffle<T>(arr: Array<T>, protect?: boolean): Array<T> {
     let res = Random.sample(arr, arr.length, protect)
     if(!protect) {
       arr.push(...res)
@@ -82,9 +81,9 @@ namespace Random {
    * @description Generate a random sequence whose items are chosen from `arr`.
    * @param arr An array of candidates or a generator.
    * @param length The length of generated sequence.
-   * @returns {any[]} Generated sequence.
+   * @returns {Array<T>} Generated sequence.
    */
-  export function randSeq(arr: any, length: number) {
+  export function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): Array<T> {
     return Array.from(Generators.randSeq(arr, length))
   }
 
@@ -92,9 +91,46 @@ namespace Random {
    * @description Generate a random string whose characters are chosen from `arr`.
    * @param arr A candidate string or an array of candidates string or a generator.
    * @param length The length of generated string.
+   * @returns {string} Generated string.
    */
-  export function randStr(arr: any = Constants.VISIBLE_ASCII_CHAR, length: number): string {
+  export function randStr(arr: ArrayLike<string> | IterableIterator<string> = Constants.VISIBLE_ASCII_CHAR, length: number): string {
     return Array.from(Generators.randSeq(arr, length)).join('')
+  }
+
+  export interface Candidate extends Object {
+    votes: number
+  }
+  export interface ElectResult {
+    winner: Candidate,
+    records: Array<number>
+  }
+  /**
+   * @description A useless function that simulates a single vote.
+   * @param candidates Candidates to vote for.
+   * @returns The index of candidate being voted.
+   */
+  export function vote(candidates: Array<Candidate>): number {
+    let voteFor = randint(candidates.length)
+    candidates[voteFor].votes++
+    return voteFor
+  }
+  /**
+   * @description A useless function that simulates an election.
+   * @param candidates Candidates for the election.
+   * @param maxVotes Max votes to win.
+   */
+  export function elect(candidates: Array<Candidate>, maxVotes: number): ElectResult {
+    candidates.forEach(candidate => candidate.votes = 0)
+    let res: ElectResult = { winner: null, records: [] }
+    while(true) {
+      for(let candidate of candidates) {
+        if(candidate.votes >= maxVotes) {
+          res.winner = candidate
+          return res
+        }
+      }
+      res.records.push(vote(candidates))
+    }
   }
 }
 
