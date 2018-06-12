@@ -119,58 +119,124 @@ var Random;
         return Array.from(Generators_1.default.randSeq(arr, length));
     }
     Random.randSeq = randSeq;
-    /**
-     * @description Generate a random string whose characters are chosen from `arr`.
-     * @param arr A candidate string or an array of candidates string or a generator.
-     * @param length The length of generated string.
-     * @returns {string} Generated string.
-     */
-    function randStr(arr, length) {
-        if (arr === void 0) { arr = Constants_1.default.VISIBLE_ASCII_CHAR; }
-        return Array.from(Generators_1.default.randSeq(arr, length)).join('');
-    }
-    Random.randStr = randStr;
-    /**
-     * @description A useless function that simulates a single vote.
-     * @param candidates Candidates to vote for.
-     * @returns The index of candidate being voted.
-     */
-    function vote(candidates) {
-        var voteFor = randint(candidates.length);
-        candidates[voteFor].votes++;
-        return voteFor;
-    }
-    Random.vote = vote;
-    /**
-     * @description A useless function that simulates an election.
-     * @param candidates Candidates for the election.
-     * @param maxVotes Max votes to win.
-     */
-    function elect(candidates, maxVotes) {
-        var e_1, _a;
-        candidates.forEach(function (candidate) { return candidate.votes = 0; });
-        var res = { winner: null, records: [] };
-        while (true) {
-            try {
-                for (var candidates_1 = __values(candidates), candidates_1_1 = candidates_1.next(); !candidates_1_1.done; candidates_1_1 = candidates_1.next()) {
-                    var candidate = candidates_1_1.value;
-                    if (candidate.votes >= maxVotes) {
-                        res.winner = candidate;
-                        return res;
+    var Election;
+    (function (Election) {
+        /**
+         * @description Generate a random string whose characters are chosen from `arr`.
+         * @param arr A candidate string or an array of candidates string or a generator.
+         * @param length The length of generated string.
+         * @returns {string} Generated string.
+         */
+        function randStr(arr, length) {
+            if (arr === void 0) { arr = Constants_1.default.VISIBLE_ASCII_CHAR; }
+            return Array.from(Generators_1.default.randSeq(arr, length)).join('');
+        }
+        Election.randStr = randStr;
+        var Candidate = /** @class */ (function () {
+            function Candidate(candidate, copy) {
+                if (copy === void 0) { copy = false; }
+                if (candidate instanceof Candidate) {
+                    // Copy
+                    if (copy) {
+                        for (var k in candidate) {
+                            this[k] = candidate[k];
+                        }
                     }
+                    else
+                        return candidate;
+                    this.votes = candidate.votes; // Just in case
+                }
+                else {
+                    if (candidate instanceof Object) { // Subscribable
+                        this.votes = typeof candidate.votes == 'number' ? candidate.votes : 0;
+                        this.value = candidate;
+                    }
+                    else { // number | string
+                        this.votes = 0;
+                        this.value = candidate;
+                    }
+                }
+            }
+            /**
+             * @description Create a new candidates array from `candidates`.
+             * @param candidates Original array.
+             */
+            Candidate.fromArray = function (candidates) {
+                return Array.prototype.map.call(candidates, function (can) { return new Candidate(can); });
+            };
+            return Candidate;
+        }());
+        Election.Candidate = Candidate;
+        /**
+         * @description A useless function that simulates a single vote.
+         * @param candidates Candidates to vote for.
+         * @returns The index of candidate being voted.
+         */
+        function vote(candidates) {
+            var voteFor = randint(candidates.length);
+            candidates[voteFor].votes++;
+            return voteFor;
+        }
+        Election.vote = vote;
+        /**
+         * @description A useless function that simulates a race election.
+         * @param candidates Candidates for the race election.
+         * @param maxVotes Max votes to win.
+         */
+        function race(candidates, maxVotes) {
+            var e_1, _a;
+            var _race = Generators_1.default.race(candidates, maxVotes);
+            var res = { winner: null, candidates: null, records: [] };
+            var info;
+            try {
+                for (var _race_1 = __values(_race), _race_1_1 = _race_1.next(); !_race_1_1.done; _race_1_1 = _race_1.next()) {
+                    var v = _race_1_1.value;
+                    res.records.push(v.index);
+                    info = v;
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (candidates_1_1 && !candidates_1_1.done && (_a = candidates_1.return)) _a.call(candidates_1);
+                    if (_race_1_1 && !_race_1_1.done && (_a = _race_1.return)) _a.call(_race_1);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
-            res.records.push(vote(candidates));
+            res.winner = info && info.winner;
+            res.candidates = info && info.candidates;
+            return res;
         }
-    }
-    Random.elect = elect;
+        Election.race = race;
+        /**
+         * @description Yet another useless function that simulates an election.
+         * @param candidates Candidates for the election.
+         * @param voters The number of voters.
+         */
+        function elect(candidates, voters) {
+            var e_2, _a;
+            var _elect = Generators_1.default.elect(candidates, voters);
+            var res = { winner: null, candidates: null, records: [] };
+            var info;
+            try {
+                for (var _elect_1 = __values(_elect), _elect_1_1 = _elect_1.next(); !_elect_1_1.done; _elect_1_1 = _elect_1.next()) {
+                    var v = _elect_1_1.value;
+                    res.records.push(v.index);
+                    info = v;
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_elect_1_1 && !_elect_1_1.done && (_a = _elect_1.return)) _a.call(_elect_1);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            res.winner = info && info.winner;
+            res.candidates = info && info.candidates;
+            return res;
+        }
+        Election.elect = elect;
+    })(Election = Random.Election || (Random.Election = {}));
 })(Random || (Random = {}));
 exports.default = Random;
 try {

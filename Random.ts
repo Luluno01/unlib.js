@@ -87,49 +87,104 @@ namespace Random {
     return Array.from(Generators.randSeq(arr, length))
   }
 
-  /**
-   * @description Generate a random string whose characters are chosen from `arr`.
-   * @param arr A candidate string or an array of candidates string or a generator.
-   * @param length The length of generated string.
-   * @returns {string} Generated string.
-   */
-  export function randStr(arr: ArrayLike<string> | IterableIterator<string> = Constants.VISIBLE_ASCII_CHAR, length: number): string {
-    return Array.from(Generators.randSeq(arr, length)).join('')
-  }
+  export namespace Election {
+    /**
+     * @description Generate a random string whose characters are chosen from `arr`.
+     * @param arr A candidate string or an array of candidates string or a generator.
+     * @param length The length of generated string.
+     * @returns {string} Generated string.
+     */
+    export function randStr(arr: ArrayLike<string> | IterableIterator<string> = Constants.VISIBLE_ASCII_CHAR, length: number): string {
+      return Array.from(Generators.randSeq(arr, length)).join('')
+    }
 
-  export interface Candidate extends Object {
-    votes: number
-  }
-  export interface ElectResult {
-    winner: Candidate,
-    records: Array<number>
-  }
-  /**
-   * @description A useless function that simulates a single vote.
-   * @param candidates Candidates to vote for.
-   * @returns The index of candidate being voted.
-   */
-  export function vote(candidates: Array<Candidate>): number {
-    let voteFor = randint(candidates.length)
-    candidates[voteFor].votes++
-    return voteFor
-  }
-  /**
-   * @description A useless function that simulates an election.
-   * @param candidates Candidates for the election.
-   * @param maxVotes Max votes to win.
-   */
-  export function elect(candidates: Array<Candidate>, maxVotes: number): ElectResult {
-    candidates.forEach(candidate => candidate.votes = 0)
-    let res: ElectResult = { winner: null, records: [] }
-    while(true) {
-      for(let candidate of candidates) {
-        if(candidate.votes >= maxVotes) {
-          res.winner = candidate
-          return res
+    export interface Candidate extends Object {
+      votes: number
+    }
+
+    export class Candidate implements Candidate {
+      votes: number
+      value?: any
+      constructor(candidate: Candidate | any, copy: boolean = false) {
+        if(candidate instanceof Candidate) {
+          // Copy
+          if(copy) {
+            for(let k in candidate) {
+              this[k] = candidate[k]
+            }
+          } else return candidate
+          this.votes = candidate.votes  // Just in case
+        } else {
+          if(candidate instanceof Object) {  // Subscribable
+            this.votes = typeof (candidate as any).votes == 'number' ? (candidate as any).votes : 0
+            this.value = candidate
+          } else {  // number | string
+            this.votes = 0
+            this.value = candidate
+          }
         }
       }
-      res.records.push(vote(candidates))
+
+      /**
+       * @description Create a new candidates array from `candidates`.
+       * @param candidates Original array.
+       */
+      static fromArray<T>(candidates: Array<Candidate> | Iterable<T>): Array<Candidate> {
+        return Array.prototype.map.call(candidates, can => new Candidate(can, /* non-copy */))
+      }
+    }
+
+    export interface ElectResult {
+      winner: Candidate
+      candidates: Array<Candidate>
+      records: Array<number>
+    }
+
+    /**
+     * @description A useless function that simulates a single vote.
+     * @param candidates Candidates to vote for.
+     * @returns The index of candidate being voted.
+     */
+    export function vote(candidates: Array<Candidate>): number {
+      let voteFor = randint(candidates.length)
+      candidates[voteFor].votes++
+      return voteFor
+    }
+
+    /**
+     * @description A useless function that simulates a race election.
+     * @param candidates Candidates for the race election.
+     * @param maxVotes Max votes to win.
+     */
+    export function race<T>(candidates: Array<Candidate> | Iterable<T>, maxVotes: number): ElectResult {
+      let _race = Generators.race(candidates, maxVotes)
+      let res: ElectResult = { winner: null, candidates: null, records: [] }
+      let info
+      for(let v of _race) {
+        res.records.push(v.index)
+        info = v
+      }
+      res.winner = info && info.winner
+      res.candidates = info && info.candidates
+      return res
+    }
+
+    /**
+     * @description Yet another useless function that simulates an election.
+     * @param candidates Candidates for the election.
+     * @param voters The number of voters.
+     */
+    export function elect<T>(candidates: Array<Candidate> | Iterable<T>, voters: number): ElectResult {
+      let _elect = Generators.elect(candidates, voters)
+      let res: ElectResult = { winner: null, candidates: null, records: [] }
+      let info
+      for(let v of _elect) {
+        res.records.push(v.index)
+        info = v
+      }
+      res.winner = info && info.winner
+      res.candidates = info && info.candidates
+      return res
     }
   }
 }

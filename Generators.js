@@ -190,22 +190,20 @@ var Generators;
     }
     Generators.randSeq = randSeq;
     /**
-     * @description Generator version of `Random.elect`.
-     * @param candidates Candidates for the election.
+     * @description A use less function that simulates a race election. Generator version of `Random.Election.race` which is, once again, somehow, a useless function.
+     * @param candidates Candidates for the race election.
      * @param maxVotes Max votes to win.
      */
-    function elect(candidates, maxVotes) {
-        var e_2, _c, candidates_1, candidates_1_1, candidate;
+    function race(candidates, maxVotes) {
+        var e_2, _c, _candidates, _candidates_1, _candidates_1_1, candidate, voteFor;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    candidates.forEach(function (candidate) { return candidate.votes = 0; });
-                    _d.label = 1;
-                case 1:
-                    if (!true) return [3 /*break*/, 3];
+                    _candidates = Random_1.default.Election.Candidate.fromArray(candidates);
+                    _candidates.forEach(function (can) { return can.votes = 0; });
                     try {
-                        for (candidates_1 = __values(candidates), candidates_1_1 = candidates_1.next(); !candidates_1_1.done; candidates_1_1 = candidates_1.next()) {
-                            candidate = candidates_1_1.value;
+                        for (_candidates_1 = __values(_candidates), _candidates_1_1 = _candidates_1.next(); !_candidates_1_1.done; _candidates_1_1 = _candidates_1.next()) {
+                            candidate = _candidates_1_1.value;
                             if (candidate.votes >= maxVotes)
                                 return [2 /*return*/];
                         }
@@ -213,19 +211,78 @@ var Generators;
                     catch (e_2_1) { e_2 = { error: e_2_1 }; }
                     finally {
                         try {
-                            if (candidates_1_1 && !candidates_1_1.done && (_c = candidates_1.return)) _c.call(candidates_1);
+                            if (_candidates_1_1 && !_candidates_1_1.done && (_c = _candidates_1.return)) _c.call(_candidates_1);
                         }
                         finally { if (e_2) throw e_2.error; }
                     }
-                    // let voteFor = Random.vote(candidates)
-                    // yield { voteFor: candidates[voteFor], index: voteFor }
-                    return [4 /*yield*/, candidates[Random_1.default.vote(candidates)]];
+                    _d.label = 1;
+                case 1:
+                    if (!true) return [3 /*break*/, 6];
+                    voteFor = Random_1.default.Election.vote(_candidates);
+                    if (!(_candidates[voteFor].votes >= maxVotes)) return [3 /*break*/, 3];
+                    return [4 /*yield*/, { voteFor: _candidates[voteFor], index: voteFor, winner: _candidates[voteFor], candidates: _candidates }];
                 case 2:
-                    // let voteFor = Random.vote(candidates)
-                    // yield { voteFor: candidates[voteFor], index: voteFor }
                     _d.sent();
-                    return [3 /*break*/, 1];
-                case 3: return [2 /*return*/];
+                    return [2 /*return*/];
+                case 3: return [4 /*yield*/, { voteFor: _candidates[voteFor], index: voteFor, candidates: _candidates }
+                    // yield _candidates[Random.vote(_candidates)]
+                ];
+                case 4:
+                    _d.sent();
+                    _d.label = 5;
+                case 5: return [3 /*break*/, 1];
+                case 6: return [2 /*return*/];
+            }
+        });
+    }
+    Generators.race = race;
+    /**
+     * @description Yet another useless function that simulates an election. Generator version of `Random.Election.elect` which is, once again, somehow, a useless function.
+     * @param candidates Candidates for the election.
+     * @param voters The number of voters.
+     */
+    function elect(candidates, voters) {
+        var e_3, _c, _candidates, winner, _d, _e, i, voteFor, e_3_1;
+        return __generator(this, function (_f) {
+            switch (_f.label) {
+                case 0:
+                    _candidates = Random_1.default.Election.Candidate.fromArray(candidates);
+                    _candidates.forEach(function (can) { return can.votes = 0; });
+                    _f.label = 1;
+                case 1:
+                    _f.trys.push([1, 8, 9, 10]);
+                    _d = __values(range(1, voters + 1)), _e = _d.next();
+                    _f.label = 2;
+                case 2:
+                    if (!!_e.done) return [3 /*break*/, 7];
+                    i = _e.value;
+                    voteFor = Random_1.default.Election.vote(_candidates);
+                    if (!winner || _candidates[voteFor].votes > winner.votes)
+                        winner = _candidates[voteFor];
+                    if (!(i == voters)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, { voteFor: _candidates[voteFor], index: voteFor, winner: winner, candidates: _candidates }];
+                case 3:
+                    _f.sent();
+                    return [3 /*break*/, 6];
+                case 4: return [4 /*yield*/, { voteFor: _candidates[voteFor], index: voteFor, candidates: _candidates }];
+                case 5:
+                    _f.sent();
+                    _f.label = 6;
+                case 6:
+                    _e = _d.next();
+                    return [3 /*break*/, 2];
+                case 7: return [3 /*break*/, 10];
+                case 8:
+                    e_3_1 = _f.sent();
+                    e_3 = { error: e_3_1 };
+                    return [3 /*break*/, 10];
+                case 9:
+                    try {
+                        if (_e && !_e.done && (_c = _d.return)) _c.call(_d);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                    return [7 /*endfinally*/];
+                case 10: return [2 /*return*/];
             }
         });
     }

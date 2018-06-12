@@ -26,10 +26,36 @@ declare namespace Generators {
      */
     function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): IterableIterator<any>;
     /**
-     * @description Generator version of `Random.elect`.
-     * @param candidates Candidates for the election.
+     * @description A use less function that simulates a race election. Generator version of `Random.Election.race` which is, once again, somehow, a useless function.
+     * @param candidates Candidates for the race election.
      * @param maxVotes Max votes to win.
      */
-    function elect(candidates: Array<Random.Candidate>, maxVotes: number): IterableIterator<Random.Candidate>;
+    function race<T>(candidates: Array<Random.Election.Candidate> | Iterable<T>, maxVotes: number): IterableIterator<{
+        voteFor: Random.Election.Candidate;
+        index: number;
+        winner: Random.Election.Candidate;
+        candidates: Random.Election.Candidate[];
+    } | {
+        voteFor: Random.Election.Candidate;
+        index: number;
+        candidates: Random.Election.Candidate[];
+        winner?: undefined;
+    }>;
+    /**
+     * @description Yet another useless function that simulates an election. Generator version of `Random.Election.elect` which is, once again, somehow, a useless function.
+     * @param candidates Candidates for the election.
+     * @param voters The number of voters.
+     */
+    function elect<T>(candidates: Array<Random.Election.Candidate> | Iterable<T>, voters: number): IterableIterator<{
+        voteFor: Random.Election.Candidate;
+        index: number;
+        winner: Random.Election.Candidate;
+        candidates: Random.Election.Candidate[];
+    } | {
+        voteFor: Random.Election.Candidate;
+        index: number;
+        candidates: Random.Election.Candidate[];
+        winner?: undefined;
+    }>;
 }
 export default Generators;

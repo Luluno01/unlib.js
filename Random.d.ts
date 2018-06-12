@@ -40,31 +40,50 @@ declare namespace Random {
      * @returns {Array<T>} Generated sequence.
      */
     function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): Array<T>;
-    /**
-     * @description Generate a random string whose characters are chosen from `arr`.
-     * @param arr A candidate string or an array of candidates string or a generator.
-     * @param length The length of generated string.
-     * @returns {string} Generated string.
-     */
-    function randStr(arr: ArrayLike<string> | IterableIterator<string>, length: number): string;
-    interface Candidate extends Object {
-        votes: number;
+    namespace Election {
+        /**
+         * @description Generate a random string whose characters are chosen from `arr`.
+         * @param arr A candidate string or an array of candidates string or a generator.
+         * @param length The length of generated string.
+         * @returns {string} Generated string.
+         */
+        function randStr(arr: ArrayLike<string> | IterableIterator<string>, length: number): string;
+        interface Candidate extends Object {
+            votes: number;
+        }
+        class Candidate implements Candidate {
+            votes: number;
+            value?: any;
+            constructor(candidate: Candidate | any, copy?: boolean);
+            /**
+             * @description Create a new candidates array from `candidates`.
+             * @param candidates Original array.
+             */
+            static fromArray<T>(candidates: Array<Candidate> | Iterable<T>): Array<Candidate>;
+        }
+        interface ElectResult {
+            winner: Candidate;
+            candidates: Array<Candidate>;
+            records: Array<number>;
+        }
+        /**
+         * @description A useless function that simulates a single vote.
+         * @param candidates Candidates to vote for.
+         * @returns The index of candidate being voted.
+         */
+        function vote(candidates: Array<Candidate>): number;
+        /**
+         * @description A useless function that simulates a race election.
+         * @param candidates Candidates for the race election.
+         * @param maxVotes Max votes to win.
+         */
+        function race<T>(candidates: Array<Candidate> | Iterable<T>, maxVotes: number): ElectResult;
+        /**
+         * @description Yet another useless function that simulates an election.
+         * @param candidates Candidates for the election.
+         * @param voters The number of voters.
+         */
+        function elect<T>(candidates: Array<Candidate> | Iterable<T>, voters: number): ElectResult;
     }
-    interface ElectResult {
-        winner: Candidate;
-        records: Array<number>;
-    }
-    /**
-     * @description A useless function that simulates a single vote.
-     * @param candidates Candidates to vote for.
-     * @returns The index of candidate being voted.
-     */
-    function vote(candidates: Array<Candidate>): number;
-    /**
-     * @description A useless function that simulates an election.
-     * @param candidates Candidates for the election.
-     * @param maxVotes Max votes to win.
-     */
-    function elect(candidates: Array<Candidate>, maxVotes: number): ElectResult;
 }
 export default Random;

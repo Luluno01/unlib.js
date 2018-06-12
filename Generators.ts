@@ -52,19 +52,40 @@ namespace Generators {
   }
 
   /**
-   * @description Generator version of `Random.elect` which is, once again, somehow, a useless function.
-   * @param candidates Candidates for the election.
+   * @description A use less function that simulates a race election. Generator version of `Random.Election.race` which is, once again, somehow, a useless function.
+   * @param candidates Candidates for the race election.
    * @param maxVotes Max votes to win.
    */
-  export function *elect(candidates: Array<Random.Candidate>, maxVotes: number) {
-    candidates.forEach(candidate => candidate.votes = 0)
+  export function *race<T>(candidates: Array<Random.Election.Candidate> | Iterable<T>, maxVotes: number) {
+    let _candidates: Array<Random.Election.Candidate> = Random.Election.Candidate.fromArray(candidates)
+    _candidates.forEach(can => can.votes = 0)
+    for(let candidate of _candidates) {
+      if(candidate.votes >= maxVotes) return
+    }
     while(true) {
-      for(let candidate of candidates) {
-        if(candidate.votes >= maxVotes) return
-      }
-      // let voteFor = Random.vote(candidates)
-      // yield { voteFor: candidates[voteFor], index: voteFor }
-      yield candidates[Random.vote(candidates)]
+      let voteFor = Random.Election.vote(_candidates)
+      if(_candidates[voteFor].votes >= maxVotes) {
+         yield { voteFor: _candidates[voteFor], index: voteFor, winner: _candidates[voteFor], candidates: _candidates }
+         return
+      } else yield { voteFor: _candidates[voteFor], index: voteFor, candidates: _candidates }
+      // yield _candidates[Random.vote(_candidates)]
+    }
+  }
+
+  /**
+   * @description Yet another useless function that simulates an election. Generator version of `Random.Election.elect` which is, once again, somehow, a useless function.
+   * @param candidates Candidates for the election.
+   * @param voters The number of voters.
+   */
+  export function *elect<T>(candidates: Array<Random.Election.Candidate> | Iterable<T>, voters: number) {
+    let _candidates: Array<Random.Election.Candidate> = Random.Election.Candidate.fromArray(candidates)
+    _candidates.forEach(can => can.votes = 0)
+    let winner: Random.Election.Candidate
+    for(let i of range(1, voters + 1)) {
+      let voteFor = Random.Election.vote(_candidates)
+      if(!winner || _candidates[voteFor].votes > winner.votes) winner = _candidates[voteFor]
+      if(i == voters) yield { voteFor: _candidates[voteFor], index: voteFor, winner: winner, candidates: _candidates }
+      else yield { voteFor: _candidates[voteFor], index: voteFor, candidates: _candidates }
     }
   }
 }
