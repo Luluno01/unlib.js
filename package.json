@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc index.ts -t es5 --lib esnext --downlevelIteration -d",
+    "build": "tsc",
     "build6": "tsc index.ts -t es6 --lib esnext -d"
   },
   "keywords": [
