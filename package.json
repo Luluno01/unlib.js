@@ -10,7 +10,11 @@
   },
   "keywords": [
     "lib",
-    "random"
+    "random",
+    "promise",
+    "object",
+    "generator",
+    "JSON"
   ],
   "author": "Untitled",
   "license": "MIT",
