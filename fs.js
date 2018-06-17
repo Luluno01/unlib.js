@@ -107,6 +107,56 @@ function rm(filename) {
     });
 }
 pfs.rm = rm;
+/**
+ * @description Dump a JavaScript value to a JavaScript Object Notation (JSON) string file.
+ * @param path A path to a file. If a URL is provided, it must use the `file:` protocol.
+ * URL support is _experimental_.
+ * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
+ * @param options Either the encoding for the file, or an object optionally specifying the encoding, file mode, and flag.
+ * If `encoding` is not supplied, the default of `'utf8'` is used.
+ * If `mode` is not supplied, the default of `0o666` is used.
+ * If `mode` is a string, it is parsed as an octal integer.
+ * If `flag` is not supplied, the default of `'w'` is used.
+ * @returns {(value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>} A function that writes stringified `value` and returns a promise object.
+ * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
+ */
+function dumpJSON(path, options) {
+    return function (value, replacer, space) {
+        var str;
+        try {
+            str = JSON.stringify(value, replacer, space);
+        }
+        catch (err) {
+            return Promise.reject(err);
+        }
+        return pfs.writeFile(path, str, options);
+    };
+}
+pfs.dumpJSON = dumpJSON;
+/**
+ * @description Load from a JSON string file into an object
+ * @param path Same as `fs.readFile`'s. A path to a JSON string file. If a URL is provided, it must use the `file:` protocol.
+ * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
+ * @param options Same as `fs.readFile`'s. An object that may contain an optional flag.
+ * If a flag is not provided, it defaults to `'r'`.
+ * @returns {(reviver?: JSONParseReviver) => Promise<any>} A function that reads from a JSON string file from `path` and returns a promise object.
+ * Returned function receives a `reviver` parameter, which is exactly the same as `JSON.parse`'s.
+ */
+function loadJSON(path, options) {
+    return function (reviver) {
+        return pfs.readFile(path, options).then(function (data) {
+            var obj;
+            try {
+                obj = JSON.parse(data.toString(), reviver);
+            }
+            catch (err) {
+                return Promise.reject(err);
+            }
+            return Promise.resolve(obj);
+        });
+    };
+}
+pfs.loadJSON = loadJSON;
 exports.default = pfs;
 try {
     for (var key in pfs)
@@ -114,3 +164,4 @@ try {
 }
 catch (_b) {
 }
+//# sourceMappingURL=fs.js.map

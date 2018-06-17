@@ -4,6 +4,7 @@ import Constants from './Constants';
 import Binary from './Binary';
 import Promise from './Prom';
 import * as fs from './fs';
+import * as Object from './Object';
 declare var unlib: {
     Random: typeof Random;
     Generators: typeof Generators;
@@ -15,5 +16,7 @@ declare var unlib: {
     };
     Promise: typeof Promise;
     fs: fs.fs;
+    JSON: import("./JSON").EnhancedJSON;
+    Object: Object.EnhancedObject;
 };
 export default unlib;

@@ -108,3 +108,4 @@ var Timer = /** @class */ (function () {
     return Timer;
 }());
 exports.Timer = Timer;
+//# sourceMappingURL=Timer.js.map

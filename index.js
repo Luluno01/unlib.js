@@ -7,6 +7,8 @@ var Binary_1 = require("./Binary");
 var Time_1 = require("./Time");
 var Prom_1 = require("./Prom");
 var fs = require("./fs");
+var JSON_1 = require("./JSON");
+var Object = require("./Object");
 var unlib = {
     Random: Random_1.default,
     Generators: Generators_1.default,
@@ -14,7 +16,9 @@ var unlib = {
     Binary: Binary_1.default,
     Time: Time_1.default,
     Promise: Prom_1.default,
-    fs: fs.default
+    fs: fs.default,
+    JSON: JSON_1.default,
+    Object: Object.default
 };
 exports.default = unlib;
 try {
@@ -24,3 +28,4 @@ try {
 }
 catch (_a) {
 }
+//# sourceMappingURL=index.js.map

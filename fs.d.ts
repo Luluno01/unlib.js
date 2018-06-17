@@ -1,5 +1,17 @@
 /// <reference types="node" />
 import * as _fs from 'fs';
+declare type WriteFileOption = {
+    encoding?: string | null;
+    mode?: number | string;
+    flag?: string;
+} | string | null;
+declare type ReadFileOption = {
+    encoding?: null;
+    flag?: string;
+} | string | null;
+declare type JSONParseReviver = ((key: any, value: any) => any);
+declare type JSONStringifyReplacerFunction = (key: string, value: any) => any;
+declare type JSONStringifyReplacerArray = (number | string)[] | null;
 export interface fs {
     constants: typeof _fs.constants;
     Stats: typeof _fs.Stats;
@@ -67,9 +79,6 @@ export interface fs {
     writeFileSync: typeof _fs.writeFileSync;
     appendFile: typeof _fs.appendFile.__promisify__;
     appendFileSync: typeof _fs.appendFileSync;
-    /**
-     * Cannot be promisified
-     */
     watch: typeof _fs.watch;
     watchFile: typeof _fs.watchFile;
     unwatchFile: typeof _fs.unwatchFile;
@@ -79,18 +88,12 @@ export interface fs {
     mkdtempSync: typeof _fs.mkdtempSync;
     copyFile: typeof _fs.copyFile.__promisify__;
     copyFileSync: typeof _fs.copyFileSync;
-    /**
-     * Cannot be promisified
-     */
     createReadStream: typeof _fs.createReadStream;
     ReadStream: typeof _fs.ReadStream;
     FileReadStream: any;
     createWriteStream: typeof _fs.createWriteStream;
     WriteStream: typeof _fs.WriteStream;
     FileWriteStream: any;
-    /**
-     * Custom functions below
-     */
     /**
      * @description Make a directory recursively.
      * @param dirname Path to target directory.
@@ -104,6 +107,30 @@ export interface fs {
      * @returns {Promise<any>}
      */
     rm(filename: string): Promise<void>;
+    /**
+     * @description Dump a JavaScript value to a JavaScript Object Notation (JSON) string file.
+     * @param path A path to a file. If a URL is provided, it must use the `file:` protocol.
+     * URL support is _experimental_.
+     * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
+     * @param options Either the encoding for the file, or an object optionally specifying the encoding, file mode, and flag.
+     * If `encoding` is not supplied, the default of `'utf8'` is used.
+     * If `mode` is not supplied, the default of `0o666` is used.
+     * If `mode` is a string, it is parsed as an octal integer.
+     * If `flag` is not supplied, the default of `'w'` is used.
+     * @returns {(value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>} A function that writes stringified `value` and returns a promise object.
+     * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
+     */
+    dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>;
+    /**
+     * @description Load from a JSON string file into an object
+     * @param path Same as `fs.readFile`'s. A path to a JSON string file. If a URL is provided, it must use the `file:` protocol.
+     * If a file descriptor is provided, the underlying file will _not_ be closed automatically.
+     * @param options Same as `fs.readFile`'s. An object that may contain an optional flag.
+     * If a flag is not provided, it defaults to `'r'`.
+     * @returns {(reviver?: JSONParseReviver) => Promise<any>} A function that reads from a JSON string file from `path` and returns a promise object.
+     * Returned function receives a `reviver` parameter, which is exactly the same as `JSON.parse`'s.
+     */
+    loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any>;
 }
 declare let pfs: fs;
 export default pfs;
