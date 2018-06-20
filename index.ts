@@ -3,10 +3,10 @@ import Random from './Random'
 import Constants from './Constants'
 import Binary from './Binary'
 import Time from './Time'
-import Promise from './Prom'
+import Prom from './Prom'
 import * as fs from './fs'
 import JSON from './JSON'
-import * as Object from './Object'
+import * as Obj from './Obj'
 
 var unlib = {
   Random,
@@ -14,10 +14,10 @@ var unlib = {
   Constants,
   Binary,
   Time,
-  Promise,
+  Prom,
   fs: fs.default,
   JSON,
-  Object: Object.default
+  Obj: Obj.default
 }
 
 export default unlib
