@@ -45,9 +45,10 @@ namespace Generators {
    */
   export function *randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number) {
     let _arr: Array<T>
-    if('next' in arr && arr.next && arr[Symbol.iterator]) _arr = Array.from(arr)  // [...arr]
+    if(typeof arr != 'string' && 'next' in arr && arr.next && arr[Symbol.iterator]) _arr = [...arr]
+    else _arr = arr as any
     for(let i = 0; i < length; i++) {
-      yield arr[Random.randint(_arr.length)]
+      yield _arr[Random.randint(_arr.length)]
     }
   }
 

@@ -86,17 +86,18 @@ namespace Random {
   export function randSeq<T>(arr: ArrayLike<T> | IterableIterator<T>, length: number): Array<T> {
     return Array.from(Generators.randSeq(arr, length))
   }
+  
+  /**
+   * @description Generate a random string whose characters are chosen from `arr`.
+   * @param arr A candidate string or an array of candidates string or a generator.
+   * @param length The length of generated string.
+   * @returns {string} Generated string.
+   */
+  export function randStr(arr: ArrayLike<string> | IterableIterator<string> = Constants.VISIBLE_ASCII_CHAR, length: number): string {
+    return Array.from(Generators.randSeq(arr, length)).join('')
+  }
 
   export namespace Election {
-    /**
-     * @description Generate a random string whose characters are chosen from `arr`.
-     * @param arr A candidate string or an array of candidates string or a generator.
-     * @param length The length of generated string.
-     * @returns {string} Generated string.
-     */
-    export function randStr(arr: ArrayLike<string> | IterableIterator<string> = Constants.VISIBLE_ASCII_CHAR, length: number): string {
-      return Array.from(Generators.randSeq(arr, length)).join('')
-    }
 
     export interface Candidate extends Object {
       votes: number
