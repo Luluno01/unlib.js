@@ -9,7 +9,7 @@ Untitled's personal JavaScript library. Still under construction.
   - [Description](#description)
   - [Usage](#usage)
     - [Pure JavaScript](#pure-javascript)
-    - [TypeScript/ES6](#typescript-es6)
+    - [TypeScript/ES6](#typescriptes6)
     - [Import a sub-module](#import-a-sub-module)
   - [Features (extending)](#features-extending)
     - [`Random`](#random)
@@ -22,6 +22,8 @@ Untitled's personal JavaScript library. Still under construction.
     - [`fs`](#fs)
       - [`mkdirs`](#mkdirs)
       - [`rm`](#rm)
+    - [`Object`](#object)
+    - [`Math`](#math)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -135,12 +137,20 @@ Make a directory recursively.
 
 Remove a file or directory recursively.
 
+### `Object`
+
+Some other helpful functions and prototype functions enhancing built-in object `Object` including `getEnumerablePropertyDescriptors`, `assignAll`, `copy`, `append`, `update`, etc.
+
+### `Math`
+
+Factorial, permutation, combination calculation functions for now.
+
 ### `Constants`
 
 Some constants.
 
 ## TODO
 
-- [ ] A new binary class using `Buffer` as storage instead of `number`.
+- [ ] A new binary class using `Buffer` or `TypedArray` as storage instead of `number`.
 - [ ] More constants.
 - [ ] More detailed documentation.
