@@ -494,6 +494,12 @@ namespace _EnhancedObject {
           enumerable: false,
           configurable: true
         })
+        Object.defineProperty(proto[name], 'name', {
+          value: name,
+          writable: false,
+          enumerable: false,
+          configurable: true
+        })
       }
     }
     return proto
@@ -544,7 +550,7 @@ export default EnhancedObject as EnhancedObject
 
 declare var module: any
 try {
-module.exports = EnhancedObject
+module.exports = _EnhancedObject.assignOwnProperties((function EnhancedObject() {}), EnhancedObject)
 module.exports.default = EnhancedObject
 } catch {
 }
