@@ -52,7 +52,7 @@ export interface EnhancedObject extends ObjectConstructor {
   patch(): void
 }
 
-namespace EnhancedObject {
+namespace _EnhancedObject {
   type ObjectType = typeof Object
   /**
    * @description Same as `Object.getOwnPropertyDescriptors`.
@@ -484,11 +484,11 @@ namespace EnhancedObject {
 
   let proto = (function() {
     let proto = {}
-    for(let name in EnhancedObject) {
+    for(let name in _EnhancedObject) {
       if(name.startsWith('append') || name.startsWith('update')) {
         Object.defineProperty(proto, name, {
           value: function(src) {
-            return EnhancedObject[name](this, src)
+            return _EnhancedObject[name](this, src)
           },
           writable: true,
           enumerable: false,
@@ -501,7 +501,7 @@ namespace EnhancedObject {
 
   let protoList = (function() {
     let proto = []
-    for(let name in EnhancedObject) {
+    for(let name in _EnhancedObject) {
       if(name.startsWith('append') || name.startsWith('update')) {
         proto.push(name)
       }
@@ -510,7 +510,7 @@ namespace EnhancedObject {
   })()
 
   export let prototype = appendOwnProperties(proto, Object.prototype)
-  Object.defineProperty(EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true })
+  Object.defineProperty(_EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true })
   for(let proto of getOwnPropertyNamesAndSymbols(prototype)) {
     Object.defineProperty(prototype, proto, { value: prototype[proto], writable: true, enumerable: false, configurable: true })
   }
@@ -519,12 +519,12 @@ namespace EnhancedObject {
    * @description Patch built-in `Object` with `EnhancedObject`.
    */
   export function patch() {
-    append(Object, EnhancedObject)
+    append(Object, _EnhancedObject)
     for(let name of protoList) {
       Object.defineProperty(
         Object.prototype,
         name, {
-          value: EnhancedObject.prototype[name],
+          value: _EnhancedObject.prototype[name],
           writable: true,
           enumerable: false,
           configurable: true
@@ -533,12 +533,18 @@ namespace EnhancedObject {
     }
   }
 }
-EnhancedObject.appendOwnProperties(EnhancedObject, Object)
+_EnhancedObject.appendOwnProperties(_EnhancedObject, Object)
 
-export default EnhancedObject
+function EnhancedObject() {}
+_EnhancedObject.appendOwnProperties(EnhancedObject, _EnhancedObject)
+EnhancedObject.prototype = new Object  // Force extends
+_EnhancedObject.appendOwnProperties(EnhancedObject.prototype, _EnhancedObject.prototype)  // Force implement
+
+export default EnhancedObject as EnhancedObject
 
 declare var module: any
 try {
-for(var key in EnhancedObject) module.exports[key] = EnhancedObject[key]
+module.exports = EnhancedObject
+module.exports.default = EnhancedObject
 } catch {
 }
