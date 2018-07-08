@@ -4,9 +4,10 @@ import Constants from './Constants'
 import Binary from './Binary'
 import Time from './Time'
 import Prom from './Prom'
-import * as fs from './fs'
+import fs from './fs'
 import JSON from './JSON'
-import * as Obj from './Obj'
+import Obj from './Obj'
+import Math from './Math'
 
 var unlib = {
   Random,
@@ -15,9 +16,10 @@ var unlib = {
   Binary,
   Time,
   Prom,
-  fs: fs.default,
+  fs,
   JSON,
-  Obj: Obj.default
+  Object: Obj,
+  Math
 }
 
 export default unlib
