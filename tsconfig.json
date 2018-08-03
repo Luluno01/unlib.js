@@ -11,7 +11,8 @@
         "outDir": "build",
         "declaration": true,
         "declarationDir": "build",
-        "declarationMap": true
+        "declarationMap": true,
+        "noImplicitUseStrict": true
     },
     "include": [
         "*"
