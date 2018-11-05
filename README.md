@@ -143,7 +143,7 @@ Some other helpful functions and prototype functions enhancing built-in object `
 
 ### `Math`
 
-Factorial, permutation, combination calculation functions for now.
+Factorial, permutation, combination calculation, sum, mean, variance calculation functions for now.
 
 ### `Constants`
 
