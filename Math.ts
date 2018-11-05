@@ -7,6 +7,9 @@ export interface EnhancedMath extends Math {
   fac(num: number): number
   per(total: number, num: number): number
   com(total: number, num: number): number
+  sum(values: number[]): number
+  mean(values: number[]): number
+  variance(values: number[], isSample?: boolean): number
   patch(): void
 }
 
@@ -52,6 +55,32 @@ namespace EnhancedMath {
    */
   export function patch(): void {
     O.append(Math, EnhancedMath)
+  }
+
+  /**
+   * @description Get sum of `values`.
+   * @param values Values.
+   */
+  export function sum(values: number[]): number {
+    return values.reduce((a, b) => a + b)
+  }
+
+  /**
+   * @description Get the average of `values`.
+   * @param values Values.
+   */
+  export function mean(values: number[]): number {
+    return sum(values) / values.length
+  }
+
+  /**
+   * @description Get the variance of `values`.
+   * @param values Values.
+   * @param isSample Whether the values are samples.
+   */
+  export function variance(values: number[], isSample: boolean = true): number {
+    let avg = mean(values)
+    return values.reduce((previous, current) => previous + (current - avg) ** 2) / (values.length - (isSample as any))
   }
 }
 O.appendOwnProperties(EnhancedMath, Math)
