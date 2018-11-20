@@ -575,6 +575,12 @@ namespace _EnhancedObject {
   export function getSafeObject<T extends object>(obj: T): T {
     return new _Proxy(obj, handler) as T
   }
+  Object.defineProperty(getSafeObject, 'emptySafeObject', {
+    value: emptySafeObject,
+    writable: false,
+    enumerable: true,
+    configurable: true
+  } as any)
 
   /**
    * @description Get the value at specified property path of an object.
