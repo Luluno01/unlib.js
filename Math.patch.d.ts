@@ -1,4 +1,4 @@
-import { EnhancedMath } from './Math'
+import { EnhancedMath } from './src/Math'
 
 /**
  * Once you've called `unlib.Math.patch`, you are able to use functions from `EnhancedMath`.

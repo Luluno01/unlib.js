@@ -1,4 +1,4 @@
-import { EnhancedObject } from './Obj'
+import { EnhancedObject } from './src/Obj'
 
 /**
  * Once you've called `unlib.Object.patch`, you are able to use the following methods.
