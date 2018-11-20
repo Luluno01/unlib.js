@@ -1,4 +1,5 @@
 import * as assert from 'assert'
+import { isNull, isNullOrUndefined } from 'util';
 
 
 export interface EnhancedObject extends ObjectConstructor {
@@ -28,6 +29,9 @@ export interface EnhancedObject extends ObjectConstructor {
   updateAll<T, U>(dst: T, src: U): T
   updateEnumerable<T, U>(dst: T, src: U): T
   updateOwnProperties<T, U>(dst: T, src: U): T
+
+  getSafeObject<T extends object>(obj: T): T
+  get<T extends object, U>(obj: T, properties: (string | number | symbol)[], defaultValue?: U): U | any
 
   prototype: {
     /* Copied from lib.es5.d.ts */
@@ -93,7 +97,7 @@ namespace _EnhancedObject {
     assert(obj instanceof Object || typeof obj == 'object')
     let names: Set<string | symbol> = obj == Object.prototype ? new Set() : new Set(getPropertyNamesAndSymbols((obj as any).__proto__))  // Get inherited symbols | string
     // Get own symbols | string
-    let properties: PropertyDescriptor = getOwnPropertyDescriptors(obj)
+    let properties = getOwnPropertyDescriptors(obj)
     for(let propertyName of getOwnPropertyNamesAndSymbols(properties)) {
       names.add(propertyName)
       // if(Object.prototype.propertyIsEnumerable.call(obj, propertyName)) {
@@ -114,7 +118,7 @@ namespace _EnhancedObject {
     assert(obj instanceof Object || typeof obj == 'object')
     let des: { names: Set<string | symbol>; descriptors: PropertyDescriptorMap } = obj == Object.prototype ? { names: new Set(), descriptors: {} } : _getPropertyDescriptorsEntries((obj as any).__proto__)  // Get inherited descriptors
     // Get own descriptors
-    let properties: PropertyDescriptor = getOwnPropertyDescriptors(obj)
+    let properties = getOwnPropertyDescriptors(obj)
     for(let propertyName of getOwnPropertyNamesAndSymbols(properties)) {
       des.names.add(propertyName)
       let tmp: any = des.descriptors
@@ -165,7 +169,7 @@ namespace _EnhancedObject {
     assert(obj instanceof Object || typeof obj == 'object')
     let names: Set<string | symbol> = obj == Object.prototype ? new Set() : new Set(getPropertyNamesAndSymbols((obj as any).__proto__))  // Get inherited symbols | string
     // Get own symbols | string
-    let properties: PropertyDescriptor = getOwnPropertyDescriptors(obj)
+    let properties = getOwnPropertyDescriptors(obj)
     for(let propertyName of getOwnPropertyNamesAndSymbols(properties)) {
       // names.add(propertyName)
       if(Object.prototype.propertyIsEnumerable.call(obj, propertyName)) {
@@ -188,7 +192,7 @@ namespace _EnhancedObject {
     assert(obj instanceof Object || typeof obj == 'object')
     let des: { names: Set<string | symbol>; descriptors: PropertyDescriptorMap } = obj == Object.prototype ? { names: new Set(), descriptors: {} } : _getEnumerablePropertyDescriptorsEntries((obj as any).__proto__)  // Get inherited descriptors
     // Get own descriptors
-    let properties: PropertyDescriptor = getOwnPropertyDescriptors(obj)
+    let properties = getOwnPropertyDescriptors(obj)
     for(let propertyName of getOwnPropertyNamesAndSymbols(properties)) {
       // des.names.add(propertyName)
       // let tmp: any = des.descriptors
@@ -493,13 +497,13 @@ namespace _EnhancedObject {
           writable: true,
           enumerable: false,
           configurable: true
-        })
+        } as any)
         Object.defineProperty(proto[name], 'name', {
           value: name,
           writable: false,
           enumerable: false,
           configurable: true
-        })
+        } as any)
       }
     }
     return proto
@@ -516,9 +520,9 @@ namespace _EnhancedObject {
   })()
 
   export let prototype = appendOwnProperties(proto, Object.prototype)
-  Object.defineProperty(_EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true })
+  Object.defineProperty(_EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true } as any)
   for(let proto of getOwnPropertyNamesAndSymbols(prototype)) {
-    Object.defineProperty(prototype, proto, { value: prototype[proto], writable: true, enumerable: false, configurable: true })
+    Object.defineProperty(prototype, proto, { value: prototype[proto], writable: true, enumerable: false, configurable: true } as any)
   }
 
   /**
@@ -534,9 +538,64 @@ namespace _EnhancedObject {
           writable: true,
           enumerable: false,
           configurable: true
-        }
+        } as any
       )
     }
+  }
+
+  var _Proxy: ProxyConstructor = Proxy || function() {
+    throw new Error('Global object `Proxy` is required for safe object')
+  } as any as ProxyConstructor
+  export const emptySafeObject = Object.freeze(new _Proxy({}, {
+    get: () => emptySafeObject,
+    set(target, property, value) {
+      throw new Error('Attempt to set property on empty safe object')
+    }
+  }))
+  const handler: ProxyHandler<object> = {
+    get(target, property) {
+      const val = target[property]
+      switch(typeof val) {
+        case 'function':
+        case 'object': return val == null ? emptySafeObject : new _Proxy(val, handler)
+        case 'undefined': return emptySafeObject
+        default: return val
+      }
+    },
+    set(target, property, value) {
+      throw new Error('Attempt to set property on a read-only safe object')
+    }
+  }
+  /**
+   * @description Get safe wrap of an object.
+   * Wrap an existing object as an safe object, which will not raise `TypeError: Cannot read property 'someProperty' of undefined/null` errors by returning `emptySafeObject` (which is a unique and non-false constant) when encountering undefined/null property.
+   * Note that returned value is a read-only object (for safe read access to properties only).
+   * @param obj Object to wrap.
+   */
+  export function getSafeObject<T extends object>(obj: T): T {
+    return new _Proxy(obj, handler) as T
+  }
+
+  /**
+   * @description Get the value at specified property path of an object.
+   * Will not raise `TypeError: Cannot read property 'someProperty' of undefined/null` errors but return given default value when encountering undefined/null property.
+   * @param obj Target object.
+   * @param properties Property path. e.g. [ 'propertyA', 0, 'propertyB' ].
+   * @param defaultValue Default value.
+   */
+  export function get<T extends object, U>(obj: T, properties: (string | number | symbol)[], defaultValue?: U): U | any {
+    if(obj == null || obj == undefined) return defaultValue
+    for(let property of properties) {
+      const val = obj[property]
+      switch(typeof obj) {
+        // case 'function':
+        // case 'object': obj = val; break
+        case 'undefined': return defaultValue
+        default: obj = val
+      }
+      if(obj == null || obj == undefined) return defaultValue
+    }
+    return obj == null || obj == undefined ? defaultValue : obj
   }
 }
 _EnhancedObject.appendOwnProperties(_EnhancedObject, Object)

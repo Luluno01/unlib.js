@@ -14,5 +14,8 @@ declare global {
     updateAll: <T>(src: T) => {}
     updateEnumerable: <T>(src: T) => {}
     updateOwnProperties: <T>(src: T) => {}
+
+    getSafeObject<T extends object>(obj: T): T
+    get<T extends object, U>(obj: T, properties: (string | number | symbol)[], defaultValue?: U): U | any
   }
 }
