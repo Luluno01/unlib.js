@@ -89,6 +89,135 @@ namespace Generators {
       else yield { voteFor: _candidates[voteFor], index: voteFor, candidates: _candidates }
     }
   }
+
+  /**
+   * @description Traverse an object in preorder.
+   * Yields a tuple whose first element is current object, and the second element is current path.
+   * Example:
+   * for(let t of preWalk({ a: 1, b: { c: 'rua' } })) {
+   *   console.log(`Current node: ${t[0]}, current path: ${t[1]}`)
+   * }
+   * Output:
+   * Current node: [object Object], current path:
+   * Current node: 1, current path: a
+   * Current node: [object Object], current path: b
+   * Current node: rua, current path: b,c
+   * @param obj Object to be traversed.
+   * @param path Optional. Defaults to `[]`. Initial path (usually `[]`) to `obj`.
+   */
+  export function *preWalk(obj: any, path: (Symbol | string | number)[] = []): IterableIterator<[ any, (Symbol | string | number)[] ]> {
+    yield [ obj, path ]
+    if(typeof obj == 'object') {
+      if(obj instanceof Array) {
+        try {
+          for(let index in obj) {
+            let _index: number | string = parseInt(index)
+            if(isNaN(_index)) _index = index
+            let _path = path.slice(0)
+            _path.push(_index)
+            yield *preWalk(obj[index], _path)
+          }
+        } catch {}
+      } else {
+        try {
+          for(let key in obj) {
+            let _path = path.slice(0)
+            _path.push(key)
+            yield *preWalk(obj[key], _path)
+          }
+        } catch {}
+      }
+    }
+  }
+
+  /**
+   * @description Traverse an object in postorder.
+   * Yields a tuple whose first element is current object, and the second element is current path.
+   * Example:
+   * for(let t of postWalk({ a: 1, b: { c: 'rua' } })) {
+   *   console.log(`Current node: ${t[0]}, current path: ${t[1]}`)
+   * }
+   * Output:
+   * Current node: 1, current path: a
+   * Current node: rua, current path: b,c
+   * Current node: [object Object], current path: b
+   * Current node: [object Object], current path:
+   * @param obj Object to be traversed.
+   * @param path Optional. Defaults to `[]`. Initial path (usually `[]`) to `obj`.
+   */
+  export function *postWalk(obj: any, path: (Symbol | string | number)[] = []): IterableIterator<[ any, (Symbol | string | number)[] ]> {
+    if(typeof obj == 'object') {
+      if(obj instanceof Array) {
+        try {
+          for(let index in obj) {
+            let _index: number | string = parseInt(index)
+            if(isNaN(_index)) _index = index
+            let _path = path.slice(0)
+            _path.push(_index)
+            yield *postWalk(obj[index], _path)
+          }
+        } catch {}
+      } else {
+        try {
+          for(let key in obj) {
+            let _path = path.slice(0)
+            _path.push(key)
+            yield *postWalk(obj[key], _path)
+          }
+        } catch {}
+      }
+    }
+    yield [ obj, path ]
+  }
+
+  /**
+   * @description Traverse an object in level order.
+   * Yields a tuple whose first element is current object, and the second element is current path.
+   * Example:
+   * for(let t of levelWalk({ a: [ { e: 1, f: 3 } ], b: { c: 'rua' } })) {
+   *   console.log(`Current node: ${t[0]}, current path: ${t[1]}`)
+   * }
+   * Output:
+   * Current node: [object Object], current path:
+   * Current node: [object Object], current path: a
+   * Current node: [object Object], current path: b
+   * Current node: [object Object], current path: a,0
+   * Current node: [object Object], current path: a,0
+   * Current node: rua, current path: b,c
+   * Current node: 1, current path: a,0,e
+   * Current node: 3, current path: a,0,f
+   * Current node: 1, current path: a,0,e
+   * Current node: 3, current path: a,0,f
+   * @param path Optional. Defaults to `[]`. Initial path (usually `[]`) to `obj`.
+   */
+  export function *levelWalk(obj: any, path: (Symbol | string | number)[] = []): IterableIterator<[ any, (Symbol | string | number)[] ]> {
+    let queue: [ typeof obj, typeof path ][] = [ [ obj, path ] ]
+    while(queue.length) {
+      let elem = queue.shift()  // Dequeue
+      yield elem
+      let _obj = elem[0]
+      if(typeof _obj == 'object') {
+        if(_obj instanceof Array) {
+          try {
+            for(let index in _obj) {
+              let _index: number | string = parseInt(index)
+              if(isNaN(_index)) _index = index
+              let _path = elem[1].slice(0)
+              _path.push(_index)
+              queue.push([ _obj[index], _path ])
+            }
+          } catch {}
+        }
+        try {
+          for(let key in _obj) {
+            let _path = elem[1].slice(0)
+            _path.push(key)
+            queue.push([ _obj[key], _path ])  // Enqueue
+          }
+        } catch {}
+      }
+    }
+  }
 }
 
 export default Generators

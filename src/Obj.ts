@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { isNull, isNullOrUndefined } from 'util';
+import G from './Generators'
 
 
 export interface EnhancedObject extends ObjectConstructor {
@@ -48,10 +48,12 @@ export interface EnhancedObject extends ObjectConstructor {
     appendEnumerable: <T>(src: T) => T & {}
     appendOwnProperties: <T>(src: T) => T & {}
 
-    update: <T>(src: T) => {}
-    updateAll: <T>(src: T) => {}
-    updateEnumerable: <T>(src: T) => {}
-    updateOwnProperties: <T>(src: T) => {}
+    update: <T>(src: T) => T & {}
+    updateAll: <T>(src: T) => T & {}
+    updateEnumerable: <T>(src: T) => T & {}
+    updateOwnProperties: <T>(src: T) => T & {}
+
+    toSafeObject: () => Object
   }
   patch(): void
 }
@@ -474,75 +476,6 @@ namespace _EnhancedObject {
     return dst
   }
 
-  // interface prototype {
-  //   append: <T>(src: T) => T & {}
-  //   appendAll: <T>(src: T) => T & {}
-  //   appendEnumerable: <T>(src: T) => T & {}
-  //   appendOwnProperties: <T>(src: T) => T & {}
-
-  //   update: <T>(src: T) => {}
-  //   updateAll: <T>(src: T) => {}
-  //   updateEnumerable: <T>(src: T) => {}
-  //   updateOwnProperties: <T>(src: T) => {}
-  // }
-
-  let proto = (function() {
-    let proto = {}
-    for(let name in _EnhancedObject) {
-      if(name.startsWith('append') || name.startsWith('update')) {
-        Object.defineProperty(proto, name, {
-          value: function(src) {
-            return _EnhancedObject[name](this, src)
-          },
-          writable: true,
-          enumerable: false,
-          configurable: true
-        } as any)
-        Object.defineProperty(proto[name], 'name', {
-          value: name,
-          writable: false,
-          enumerable: false,
-          configurable: true
-        } as any)
-      }
-    }
-    return proto
-  })()
-
-  let protoList = (function() {
-    let proto = []
-    for(let name in _EnhancedObject) {
-      if(name.startsWith('append') || name.startsWith('update')) {
-        proto.push(name)
-      }
-    }
-    return proto
-  })()
-
-  export let prototype = appendOwnProperties(proto, Object.prototype)
-  Object.defineProperty(_EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true } as any)
-  for(let proto of getOwnPropertyNamesAndSymbols(prototype)) {
-    Object.defineProperty(prototype, proto, { value: prototype[proto], writable: true, enumerable: false, configurable: true } as any)
-  }
-
-  /**
-   * @description Patch built-in `Object` with `EnhancedObject`.
-   */
-  export function patch() {
-    append(Object, _EnhancedObject)
-    for(let name of protoList) {
-      Object.defineProperty(
-        Object.prototype,
-        name, {
-          value: _EnhancedObject.prototype[name],
-          writable: true,
-          enumerable: false,
-          configurable: true
-        } as any
-      )
-    }
-  }
-
   var _Proxy: ProxyConstructor = Proxy || function() {
     throw new Error('Global object `Proxy` is required for safe object')
   } as any as ProxyConstructor
@@ -568,7 +501,7 @@ namespace _EnhancedObject {
   }
   /**
    * @description Get safe wrap of an object.
-   * Wrap an existing object as an safe object, which will not raise `TypeError: Cannot read property 'someProperty' of undefined/null` errors by returning `emptySafeObject` (which is a unique and non-false constant) when encountering undefined/null property.
+   * Wrap an existing object as an safe object, which will not raise `TypeError: Cannot read property 'someProperty' of undefined/null` errors by returning `emptySafeObject` (which is a unique and non-false constant) when encounters undefined/null property.
    * Note that returned value is a read-only object (for safe read access to properties only).
    * @param obj Object to wrap.
    */
@@ -602,6 +535,91 @@ namespace _EnhancedObject {
       if(obj == null || obj == undefined) return defaultValue
     }
     return obj == null || obj == undefined ? defaultValue : obj
+  }
+
+  // interface prototype {
+  //   append: <T>(src: T) => T & {}
+  //   appendAll: <T>(src: T) => T & {}
+  //   appendEnumerable: <T>(src: T) => T & {}
+  //   appendOwnProperties: <T>(src: T) => T & {}
+
+  //   update: <T>(src: T) => {}
+  //   updateAll: <T>(src: T) => {}
+  //   updateEnumerable: <T>(src: T) => {}
+  //   updateOwnProperties: <T>(src: T) => {}
+  // }
+
+  let protoList = (function() {
+    let proto = [ 'toSafeObject' ]
+    for(let name in _EnhancedObject) {
+      if(name.startsWith('append') || name.startsWith('update')) {
+        proto.push(name)
+      }
+    }
+    return proto
+  })()
+
+  let proto = (function() {
+    let proto = {}
+    for(let name of protoList) {
+      if(name in _EnhancedObject) {
+        Object.defineProperty(proto, name, {
+          value: function(...args) {
+            return _EnhancedObject[name](this, ...args)
+          },
+          writable: true,
+          enumerable: false,
+          configurable: true
+        } as any)
+        Object.defineProperty(proto[name], 'name', {
+          value: name,
+          writable: false,
+          enumerable: false,
+          configurable: true
+        } as any)
+      }
+    }
+    // Special process for `toSafeObject`
+    const _name = 'toSafeObject'
+    Object.defineProperty(proto, _name, {
+      value: function() {
+        return getSafeObject(this)
+      },
+      writable: true,
+      enumerable: false,
+      configurable: true
+    } as any)
+    Object.defineProperty(proto[_name], 'name', {
+      value: _name,
+      writable: false,
+      enumerable: false,
+      configurable: true
+    } as any)
+    return proto
+  })()
+
+  export let prototype = appendOwnProperties(proto, Object.prototype)
+  Object.defineProperty(_EnhancedObject, 'prototype', { value: prototype, writable: true, enumerable: false, configurable: true } as any)
+  for(let proto of getOwnPropertyNamesAndSymbols(prototype)) {
+    Object.defineProperty(prototype, proto, { value: prototype[proto], writable: true, enumerable: false, configurable: true } as any)
+  }
+
+  /**
+   * @description Patch built-in `Object` with `EnhancedObject`.
+   */
+  export function patch() {
+    append(Object, _EnhancedObject)
+    for(let name of protoList) {
+      Object.defineProperty(
+        Object.prototype,
+        name, {
+          value: _EnhancedObject.prototype[name],
+          writable: true,
+          enumerable: false,
+          configurable: true
+        } as any
+      )
+    }
   }
 }
 _EnhancedObject.appendOwnProperties(_EnhancedObject, Object)
