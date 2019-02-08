@@ -24,6 +24,7 @@ Untitled's personal JavaScript library. Still under construction.
       - [`rm`](#rm)
     - [`Object`](#object)
     - [`Math`](#math)
+    - [`TaskQueue`](#taskqueue)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -144,6 +145,10 @@ Some other helpful functions and prototype functions enhancing built-in object `
 ### `Math`
 
 Factorial, permutation, combination calculation, sum, mean, variance calculation functions for now.
+
+### `TaskQueue`
+
+Task queue with max number of concurrent pending tasks limit.
 
 ### `Constants`
 

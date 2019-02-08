@@ -1,6 +1,5 @@
 import Constants from './Constants'
 import Generators from './Generators'
-import * as assert from 'assert'
 
 
 namespace Random {

@@ -8,6 +8,7 @@ import fs from './fs'
 import JSON from './JSON'
 import Obj from './Obj'
 import Math from './Math'
+import TaskQueue from './TaskQueue'
 
 var unlib = {
   Random,
@@ -19,7 +20,8 @@ var unlib = {
   fs,
   JSON,
   Object: Obj,
-  Math
+  Math,
+  TaskQueue
 }
 
 export default unlib
