@@ -124,3 +124,41 @@ export class TaskQueue<T> {
 }
 
 export default TaskQueue
+
+export function limitConcurrency<TArg1, T>(func: (arg1: TArg1) => Promise<T>, maxConcurrency?: number): typeof func
+export function limitConcurrency<TArg1, TArg2, T>(func: (arg1: TArg1, arg2: TArg2) => Promise<T>, maxConcurrency?: number): typeof func
+export function limitConcurrency<TArg1, TArg2, TArg3, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3) => Promise<T>, maxConcurrency?: number): typeof func
+export function limitConcurrency<TArg1, TArg2, TArg3, TArg4, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3, arg4: TArg4) => Promise<T>, maxConcurrency?: number): typeof func
+export function limitConcurrency<TArg1, TArg2, TArg3, TArg4, TArg5, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3, arg4: TArg4, arg5: TArg5) => Promise<T>, maxConcurrency?: number): typeof func
+export function limitConcurrency<T>(func: (...args) => Promise<T>, maxConcurrency: number = 5): typeof func {
+  assert(maxConcurrency)
+  let queue: {
+    func: typeof func
+    resolve: (value?: {} | PromiseLike<{}>) => void
+    reject: (reason?: any) => void
+  }[] = []
+  let pendingNum: number = 0
+  function fireNext() {
+    const { func, resolve, reject } = queue.shift()  // Dequeue
+    pendingNum++
+    (async () => {
+      try {
+        resolve(await func())
+      } catch(err) {
+        reject(err)
+      } finally {
+        pendingNum--
+        if(queue.length) fireNext()  // Fire next task if there is queueing task
+      }
+    })()  // Actually fire the task
+  }
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      queue.push({
+        func: async () => {
+          return await func(...args)
+        }, resolve, reject })  // Enqueue
+      if(pendingNum < maxConcurrency) fireNext()  // Start the task now
+    })
+  }
+}
