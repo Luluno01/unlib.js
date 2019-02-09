@@ -1,34 +1,24 @@
-import Generators from './Generators'
-import Random from './Random'
-import Constants from './Constants'
-import Binary from './Binary'
-import Time from './Time'
-import Prom from './Prom'
-import fs from './fs'
-import JSON from './JSON'
+/// <reference path="./Obj.d.ts" />
+import * as _Generators from './Generators'
+import * as _Random from './Random'
+import * as _Constants from './Constants'
+import * as _Binary from './Binary'
+import _Time from './Time'
+import * as _Prom from './Prom'
+import * as _fs from './fs'
+import * as _JSON from './JSON'
 import Obj from './Obj'
-import Math from './Math'
-import TaskQueue from './TaskQueue'
+import * as _Math from './Math'
+import _TaskQueue from './TaskQueue'
 
-var unlib = {
-  Random,
-  Generators,
-  Constants,
-  Binary,
-  Time,
-  Prom,
-  fs,
-  JSON,
-  Object: Obj,
-  Math,
-  TaskQueue
-}
-
-export default unlib
-
-declare var module: any
-try {
-  // Object.assign(module.exports, _default)
-  for(var key in unlib) module.exports[key] = unlib[key]
-} catch {
-}
+export let Random = _Random
+export let Generators = _Generators
+export let Constants = _Constants
+export let Binary = _Binary
+export let Time = _Time
+export let Prom = _Prom
+export let fs = _fs
+export let JSON = _JSON
+export let Object = Obj as EnhancedObjectConstructor
+export let Math = _Math
+export let TaskQueue = _TaskQueue

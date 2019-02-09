@@ -8,6 +8,8 @@ Untitled's personal JavaScript library. Still under construction.
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Usage](#usage)
+    - [Install](#install)
+    - [Build](#build)
     - [Pure JavaScript](#pure-javascript)
     - [TypeScript/ES6](#typescriptes6)
     - [Import a sub-module](#import-a-sub-module)
@@ -37,6 +39,18 @@ Anyone who finds a bug of this library is welcomed to open an issue :P.
 ## Usage
 
 Assume that you have already cloned this repository to your local workspace.
+
+### Install
+
+```bash
+git clone https://github.com/Luluno01/unlib.js.git && cd unlib.js && npm install
+```
+
+### Build
+
+```bash
+npm run build
+```
 
 ### Pure JavaScript
 
@@ -78,18 +92,18 @@ console.log(unlib.Random.randint(1, 101))
 
 ### Import a sub-module
 
-Just simply `require` or `import-from` `'./unlib.js/sub-module'`.
+Just simply `require` or `import-from` `'./unlib.js/build/sub-module'`.
 
 e.g. Import the module `Random`:
 
 ```JavaScript
-const Random = require('./unlib.js/Random')
+const Random = require('./unlib.js/build/Random')
 ```
 
 or
 
 ```TypeScript
-import Random from './unlib.js/Random'
+import Random from './unlib.js/build/Random'
 ```
 
 ## Features (extending)

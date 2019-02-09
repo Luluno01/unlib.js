@@ -1,19 +1,17 @@
-import fs from './fs'
+import { loadJSON, dumpJSON } from './fs'
 
 
 export interface EnhancedJSON extends JSON {
-  load: typeof fs.loadJSON
-  dump: typeof fs.dumpJSON
+  load: typeof loadJSON
+  dump: typeof dumpJSON
 }
 
-const EnhancedJSON: EnhancedJSON = {
-  [Symbol.toStringTag]: 'JSON',
-  parse: JSON.parse,
-  stringify: JSON.stringify,
-  load: fs.loadJSON,
-  dump: fs.dumpJSON
-}
+export const parse: typeof JSON.parse = JSON.parse
+export const stringify: typeof JSON.stringify = JSON.stringify
+export const load: typeof loadJSON = loadJSON
+export const dump: typeof dumpJSON = dumpJSON
 
-Object.defineProperty(EnhancedJSON, Symbol.toStringTag, {...Object.getOwnPropertyDescriptor(JSON, Symbol.toStringTag), value: 'EnhancedJSON'})
-
-export default EnhancedJSON
+declare var module: any
+try {
+  Object.defineProperty(module.exports, Symbol.toStringTag, {...Object.getOwnPropertyDescriptor(JSON, Symbol.toStringTag), value: 'EnhancedJSON'})
+} catch(err) {}

@@ -1,4 +1,4 @@
-import Prom from './Prom'
+import { promisifyAll } from './Prom'
 import * as _fs from 'fs'
 import * as path from 'path'
 import * as util from 'util'
@@ -139,12 +139,101 @@ export interface fs {
    */
   loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any>
 }
-let pfs: fs = Prom.promisifyAll(_fs, Object.keys(_fs), util.promisify) as fs
+let pfs: fs = promisifyAll(_fs, Object.keys(_fs), util.promisify) as fs
 
 let exceptions: string[] = ['Stats', 'watch', 'watchFile', 'unwatchFile', 'createReadStream', 'ReadStream', 'FileReadStream', 'createWriteStream', 'WriteStream', 'FileWriteStream']
 for(let property of exceptions) {
   pfs[property] = _fs[property]
 }
+
+/* Start of export of promisified built-in properties */
+export const constants: typeof _fs.constants = pfs.constants
+export const Stats: typeof _fs.Stats = pfs.Stats
+export const F_OK: number = pfs.F_OK
+export const R_OK: number = pfs.R_OK
+export const W_OK: number = pfs.W_OK
+export const X_OK: number = pfs.X_OK
+export const access: typeof _fs.access.__promisify__ = pfs.access
+export const accessSync: typeof _fs.accessSync = pfs.accessSync
+export const exists: typeof _fs.exists.__promisify__ = pfs.exists
+export const existsSync: typeof _fs.existsSync = pfs.existsSync
+export const readFile: typeof _fs.readFile.__promisify__ = pfs.readFile
+export const readFileSync: typeof _fs.readFileSync = pfs.readFileSync
+export const close: typeof _fs.close.__promisify__ = pfs.close
+export const closeSync: typeof _fs.closeSync = pfs.closeSync
+export const open: typeof _fs.open.__promisify__ = pfs.open
+export const openSync: typeof _fs.openSync = pfs.openSync
+export const read: typeof _fs.read.__promisify__ = pfs.read
+export const readSync: typeof _fs.readSync = pfs.readSync
+export const write: typeof _fs.write.__promisify__ = pfs.write
+export const writeSync: typeof _fs.writeSync = pfs.writeSync
+export const rename: typeof _fs.rename.__promisify__ = pfs.rename
+export const renameSync: typeof _fs.renameSync = pfs.renameSync
+export const truncate: typeof _fs.truncate.__promisify__ = pfs.truncate
+export const truncateSync: typeof _fs.truncateSync = pfs.truncateSync
+export const ftruncate: typeof _fs.ftruncate.__promisify__ = pfs.ftruncate
+export const ftruncateSync: typeof _fs.ftruncateSync = pfs.ftruncateSync
+export const rmdir: typeof _fs.rmdir.__promisify__ = pfs.rmdir
+export const rmdirSync: typeof _fs.rmdirSync = pfs.rmdirSync
+export const fdatasync: typeof _fs.fdatasync.__promisify__ = pfs.fdatasync
+export const fdatasyncSync: typeof _fs.fdatasyncSync = pfs.fdatasyncSync
+export const fsync: typeof _fs.fsync.__promisify__ = pfs.fsync
+export const fsyncSync: typeof _fs.fsyncSync = pfs.fsyncSync
+export const mkdir: typeof _fs.mkdir.__promisify__ = pfs.mkdir
+export const mkdirSync: typeof _fs.mkdirSync = pfs.mkdirSync
+export const readdir: typeof _fs.readdir.__promisify__ = pfs.readdir
+export const readdirSync: typeof _fs.readdirSync = pfs.readdirSync
+export const fstat: typeof _fs.fstat.__promisify__ = pfs.fstat
+export const lstat: typeof _fs.lstat.__promisify__ = pfs.lstat
+export const stat: typeof _fs.stat.__promisify__ = pfs.stat
+export const fstatSync: typeof _fs.fstatSync = pfs.fstatSync
+export const lstatSync: typeof _fs.lstatSync = pfs.lstatSync
+export const statSync: typeof _fs.statSync = pfs.statSync
+export const readlink: typeof _fs.readlink.__promisify__ = pfs.readlink
+export const readlinkSync: typeof _fs.readlinkSync = pfs.readlinkSync
+export const symlink: typeof _fs.symlink.__promisify__ = pfs.symlink
+export const symlinkSync: typeof _fs.symlinkSync = pfs.symlinkSync
+export const link: (existingPath: _fs.PathLike, newPath: _fs.PathLike) => Promise<void> = pfs.link
+export const linkSync: typeof _fs.linkSync = pfs.linkSync
+export const unlink: typeof _fs.unlink.__promisify__ = pfs.unlink
+export const unlinkSync: typeof _fs.unlinkSync = pfs.unlinkSync
+export const fchmod: typeof _fs.fchmod.__promisify__ = pfs.fchmod
+export const fchmodSync: typeof _fs.fchmodSync = pfs.fchmodSync
+export const chmod: typeof _fs.chmod.__promisify__ = pfs.chmod
+export const chmodSync: typeof _fs.chmodSync = pfs.chmodSync
+export const fchown: typeof _fs.fchown.__promisify__ = pfs.fchown
+export const fchownSync: typeof _fs.fchownSync = pfs.fchownSync
+export const chown: typeof _fs.chown.__promisify__ = pfs.chown
+export const chownSync: typeof _fs.chownSync = pfs.chownSync
+export const utimes: typeof _fs.utimes.__promisify__ = pfs.utimes
+export const utimesSync: typeof _fs.utimesSync = pfs.utimesSync
+export const futimes: typeof _fs.futimes.__promisify__ = pfs.futimes
+export const futimesSync: typeof _fs.futimesSync = pfs.futimesSync
+export const writeFile: typeof _fs.writeFile.__promisify__ = pfs.writeFile
+export const writeFileSync: typeof _fs.writeFileSync = pfs.writeFileSync
+export const appendFile: typeof _fs.appendFile.__promisify__ = pfs.appendFile
+export const appendFileSync: typeof _fs.appendFileSync = pfs.appendFileSync
+
+/* Cannot be promisified */
+export const watch: typeof _fs.watch = pfs.watch
+export const watchFile: typeof _fs.watchFile = pfs.watchFile
+export const unwatchFile: typeof _fs.unwatchFile = pfs.unwatchFile
+
+export const realpathSync: typeof _fs.realpathSync = pfs.realpathSync
+export const realpath: typeof _fs.realpath.__promisify__ = pfs.realpath
+export const mkdtemp: typeof _fs.mkdtemp.__promisify__ = pfs.mkdtemp
+export const mkdtempSync: typeof _fs.mkdtempSync = pfs.mkdtempSync
+export const copyFile: typeof _fs.copyFile.__promisify__ = pfs.copyFile
+export const copyFileSync: typeof _fs.copyFileSync = pfs.copyFileSync
+
+/* Cannot be promisified */
+export const createReadStream: typeof _fs.createReadStream = pfs.createReadStream
+export const ReadStream: typeof _fs.ReadStream = pfs.ReadStream
+export const FileReadStream: any = pfs.FileReadStream  // Not listed in @types/node/index.d.ts
+export const createWriteStream: typeof _fs.createWriteStream = pfs.createWriteStream
+export const WriteStream: typeof _fs.WriteStream = pfs.WriteStream
+export const FileWriteStream: any = pfs.FileWriteStream  // Not listed in @types/node/index.d.ts
+/* End of export of promisified built-in properties */
 
 /**
  * @description Make a directory recursively.
@@ -152,7 +241,7 @@ for(let property of exceptions) {
  * @returns {Promise<any>}
  * @author Zezhong Xu
  */
-function mkdirs(dirname: string): Promise<void> {
+export function mkdirs(dirname: string): Promise<void> {
   return new Promise((resolve, reject) => {
     // console.log(`Attempt to make ${dirname}`)
     return pfs.exists(dirname)
@@ -182,14 +271,13 @@ function mkdirs(dirname: string): Promise<void> {
     })
   })
 }
-pfs.mkdirs = mkdirs
 
 /**
  * @description Remove a file or directory recursively.
  * @param filename Path to a file or directory to remove.
  * @returns {Promise<any>}
  */
-function rm(filename: string): Promise<void> {
+export function rm(filename: string): Promise<void> {
   function deleteSubs(filename: string): Promise<any> {
     return new Promise((resolve, reject) => {
       return pfs.readdir(filename)
@@ -220,7 +308,6 @@ function rm(filename: string): Promise<void> {
     .catch(reject);
   });
 }
-pfs.rm = rm
 
 /**
  * @description Dump a JavaScript value to a JavaScript Object Notation (JSON) string file.
@@ -235,7 +322,7 @@ pfs.rm = rm
  * @returns {(value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>} A function that writes stringified `value` and returns a promise object.
  * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
  */
-function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void> {
+export function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void> {
   return (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number): Promise<void> => {
     let str: string
     try {
@@ -246,7 +333,6 @@ function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (valu
     return pfs.writeFile(path, str, options)
   }
 }
-pfs.dumpJSON = dumpJSON
 
 /**
  * @description Load from a JSON string file into an object
@@ -257,7 +343,7 @@ pfs.dumpJSON = dumpJSON
  * @returns {(reviver?: JSONParseReviver) => Promise<any>} A function that reads from a JSON string file from `path` and returns a promise object.
  * Returned function receives a `reviver` parameter, which is exactly the same as `JSON.parse`'s.
  */
-function loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any> {
+export function loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any> {
   return (reviver?: JSONParseReviver): Promise<any> => {
     return pfs.readFile(path, options).then(data => {
       let obj: any
@@ -269,13 +355,4 @@ function loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviv
       return Promise.resolve(obj)
     })
   }
-}
-pfs.loadJSON = loadJSON
-
-export default pfs
-
-declare var module: any
-try {
-  for(var key in pfs) module.exports[key] = pfs[key]
-} catch {
 }
