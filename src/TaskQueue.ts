@@ -130,6 +130,12 @@ export function limitConcurrency<TArg1, TArg2, T>(func: (arg1: TArg1, arg2: TArg
 export function limitConcurrency<TArg1, TArg2, TArg3, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3) => Promise<T>, maxConcurrency?: number): typeof func
 export function limitConcurrency<TArg1, TArg2, TArg3, TArg4, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3, arg4: TArg4) => Promise<T>, maxConcurrency?: number): typeof func
 export function limitConcurrency<TArg1, TArg2, TArg3, TArg4, TArg5, T>(func: (arg1: TArg1, arg2: TArg2, arg3: TArg3, arg4: TArg4, arg5: TArg5) => Promise<T>, maxConcurrency?: number): typeof func
+/**
+ * @description Limit the number of concurrent invocation of an asynchronous function.
+ * @param func Function to be wrapped.
+ * @param maxConcurrency Max number of concurrency.
+ * @returns Wrapped function.
+ */
 export function limitConcurrency<T>(func: (...args) => Promise<T>, maxConcurrency: number = 5): typeof func {
   assert(maxConcurrency)
   let queue: {
