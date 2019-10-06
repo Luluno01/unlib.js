@@ -10,15 +10,17 @@ import * as _JSON from './JSON'
 import Obj from './Obj'
 import * as _Math from './Math'
 import _TaskQueue from './TaskQueue'
+import _EventBarrier from './EventBarrier'
 
-export let Random = _Random
-export let Generators = _Generators
-export let Constants = _Constants
-export let Binary = _Binary
-export let Time = _Time
-export let Prom = _Prom
-export let fs = _fs
-export let JSON = _JSON
-export let Object = Obj as EnhancedObjectConstructor
-export let Math = _Math
-export let TaskQueue = _TaskQueue
+export const Random = _Random
+export const Generators = _Generators
+export const Constants = _Constants
+export const Binary = _Binary
+export const Time = _Time
+export const Prom = _Prom
+export const fs = _fs
+export const JSON = _JSON
+export const Object = Obj as EnhancedObjectConstructor
+export const Math = _Math
+export const TaskQueue = _TaskQueue
+export const EventBarrier = _EventBarrier

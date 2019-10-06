@@ -1,9 +1,11 @@
 import { Timer } from './Timer'
 import { sleep } from './sleep'
+import { timeoutify } from './timeoutify'
 
 var Time = {
   Timer,
-  sleep
+  sleep,
+  timeoutify
 }
 
 export default Time

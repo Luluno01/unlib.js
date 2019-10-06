@@ -20,6 +20,7 @@ Untitled's personal JavaScript library. Still under construction.
     - [`Time`](#time)
       - [`Timer`](#timer)
       - [`sleep`](#sleep)
+      - [`timeoutify`](#timeoutify)
     - [`Promise`](#promise)
     - [`fs`](#fs)
       - [`mkdirs`](#mkdirs)
@@ -27,6 +28,7 @@ Untitled's personal JavaScript library. Still under construction.
     - [`Object`](#object)
     - [`Math`](#math)
     - [`TaskQueue`](#taskqueue)
+    - [`EventBarrier`](#eventbarrier)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -55,13 +57,13 @@ npm run build
 ### Pure JavaScript
 
 ```JavaScript
-const unlib = require('./unlib.js');
+const unlib = require('./unlib.js')
 ```
 
 or
 
 ```JavaScript
-const { Random, Generators, Binary, Time, Promise, fs, Constants } = require('./unlib.js');
+const { Random, Generators, Binary, Time, Promise, fs, Constants } = require('./unlib.js')
 ```
 
 or
@@ -108,7 +110,7 @@ import Random from './unlib.js/build/Random'
 
 ## Features (extending)
 
-This library has only 5 types of functionalities currently. I will implement some more ~~wheels~~ functionalities once I have to deal with some boring and repeated works.
+This library has only 10 types of functionalities currently. I will implement some more ~~wheels~~ functionalities once I have to deal with some boring and repeated works.
 
 Somehow, I can not provide detailed documentation for now. If you are interested in this library and require more details, feel free to open an issue to let me know which part of this library makes you confused or whatever you want to know about this repository.
 
@@ -135,6 +137,10 @@ A timer class that calls your callback function at specified interval with an op
 #### `sleep`
 
 Promise version of `setTimeout`.
+
+#### `timeoutify`
+
+Add a timeout constraint to asynchronous function.
 
 ### `Promise`
 
@@ -163,6 +169,10 @@ Factorial, permutation, combination calculation, sum, mean, variance calculation
 ### `TaskQueue`
 
 Task queue with max number of concurrent pending tasks limit.
+
+### `EventBarrier`
+
+Event barrier that brings `notify` and `waitFor` primitives to you.
 
 ### `Constants`
 

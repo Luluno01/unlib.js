@@ -139,10 +139,21 @@ export interface fs {
    */
   loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any>
 }
-let pfs: fs = promisifyAll(_fs, Object.keys(_fs), util.promisify) as fs
+const pfs: fs = promisifyAll(_fs, Object.keys(_fs), util.promisify) as fs
 
-let exceptions: string[] = ['Stats', 'watch', 'watchFile', 'unwatchFile', 'createReadStream', 'ReadStream', 'FileReadStream', 'createWriteStream', 'WriteStream', 'FileWriteStream']
-for(let property of exceptions) {
+const exceptions: string[] = [
+  'Stats',
+  'watch',
+  'watchFile',
+  'unwatchFile',
+  'createReadStream',
+  'ReadStream',
+  'FileReadStream',
+  'createWriteStream',
+  'WriteStream',
+  'FileWriteStream'
+]
+for(const property of exceptions) {
   pfs[property] = _fs[property]
 }
 
@@ -238,75 +249,38 @@ export const FileWriteStream: any = pfs.FileWriteStream  // Not listed in @types
 /**
  * @description Make a directory recursively.
  * @param dirname Path to target directory.
- * @returns {Promise<any>}
- * @author Zezhong Xu
+ * @returns {Promise<void>}
  */
-export function mkdirs(dirname: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // console.log(`Attempt to make ${dirname}`)
-    return pfs.exists(dirname)
-    .then(exists => {
-      if(exists) {
-        // console.log(`Directory ${dirname} exists, done`)
-        return resolve()
-      } else {
-        // console.log(`Directory ${dirname} doesn't exist`)
-        return mkdirs(path.dirname(dirname))
-        .then(() => {
-          return pfs.mkdir(dirname)
-          .then(() => {
-            // console.log(`Directory ${dirname} made`)
-            resolve()
-          })
-          .catch(err => {
-            if(err.code != 'EEXIST') reject(err)  // Ignore error if directory has already been created
-            else {
-              // console.log(`Directory ${dirname} already made`)
-              resolve()
-            }
-          })
-        })
-        .catch(reject)
-      }
-    })
-  })
+export async function mkdirs(dirname: string): Promise<void> {
+  if(await pfs.exists(dirname)) {
+    return
+  }
+  await mkdirs(path.dirname(dirname))
+  try {
+    await pfs.mkdir(dirname)
+  } catch(err) {
+    if(err.code != 'EEXIST') throw err
+  }
 }
 
 /**
  * @description Remove a file or directory recursively.
  * @param filename Path to a file or directory to remove.
- * @returns {Promise<any>}
+ * @returns {Promise<void>}
  */
-export function rm(filename: string): Promise<void> {
-  function deleteSubs(filename: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      return pfs.readdir(filename)
-      .then(files => {
-        // Resolve after deleting all its contents
-        return Promise.all(files.map(file => rm(path.join(filename, file))));
-      })
-      .then(resolve)
-      .catch(reject);
-    });
+export async function rm(filename: string): Promise<void> {
+  async function deleteSubs(filename: string): Promise<void> {
+    await Promise.all((await pfs.readdir(filename))
+      .map(file => rm(path.join(filename, file)))
+    )
   }
-  return new Promise((resolve, reject) => {
-    return pfs.stat(filename)
-    .then(stat => {
-      if(stat.isDirectory()) {
-        return deleteSubs(filename)
-        .then(() => {
-          // After deleting all its contents, delete the directory itself
-          // console.log('I\'m going to delete the directory: ' + filename);
-          return pfs.rmdir(filename);
-        });
-      } else {  // `unlink` directly
-        // console.log('I\'m going to delete the file: ' + filename);
-        return pfs.unlink(filename);
-      }
-    })
-    .then(resolve)
-    .catch(reject);
-  });
+  if((await pfs.stat(filename)).isDirectory()) {
+    await deleteSubs(filename)
+    // After deleting all its contents, delete the directory itself
+    await pfs.rmdir(filename)
+  } else {  // `unlink` directly
+    await pfs.unlink(filename)
+  }
 }
 
 /**
@@ -323,14 +297,9 @@ export function rm(filename: string): Promise<void> {
  * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
  */
 export function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void> {
-  return (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number): Promise<void> => {
-    let str: string
-    try {
-      str = JSON.stringify(value, replacer as any, space)
-    } catch(err) {
-      return Promise.reject(err)
-    }
-    return pfs.writeFile(path, str, options)
+  return async (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number): Promise<void> => {
+    const str = JSON.stringify(value, replacer as any, space)
+    await pfs.writeFile(path, str, options)
   }
 }
 
@@ -344,15 +313,8 @@ export function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption)
  * Returned function receives a `reviver` parameter, which is exactly the same as `JSON.parse`'s.
  */
 export function loadJSON(path: _fs.PathLike | number, options?: ReadFileOption): (reviver?: JSONParseReviver) => Promise<any> {
-  return (reviver?: JSONParseReviver): Promise<any> => {
-    return pfs.readFile(path, options).then(data => {
-      let obj: any
-      try {
-        obj = JSON.parse(data.toString(), reviver)
-      } catch(err) {
-        return Promise.reject(err)
-      }
-      return Promise.resolve(obj)
-    })
+  return async (reviver?: JSONParseReviver): Promise<any> => {
+    const data = await pfs.readFile(path, options)
+    return JSON.parse(data.toString(), reviver)
   }
 }

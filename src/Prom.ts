@@ -150,8 +150,8 @@ export function promisify(func: Function): (...args: any[]) => Promise<any[]> {
  * @returns {Object} Promisified object.
  */
 export function promisifyAll<T extends Object>(obj: T, candidates=Object.keys(obj), promisifier: (func: Function) => (...args: any[]) => Promise<any> = promisify): Object {
-  let res = {}
-  for(let property of candidates) {
+  const res = {}
+  for(const property of candidates) {
     res[property] = (typeof obj[property] == 'function' && !property.endsWith('Sync')) ? promisifier(obj[property]) : obj[property]
   }
   return res
