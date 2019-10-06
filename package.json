@@ -1,12 +1,13 @@
 {
   "name": "unlib.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A general library includes Random, etc.",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "tsc",
     "build": "tsc",
-    "build6": "tsc index.ts -t es6 --lib esnext -d"
+    "build-old": "tsc --downlevelIteration"
   },
   "keywords": [
     "lib",
@@ -18,7 +19,8 @@
   ],
   "author": "Untitled",
   "license": "MIT",
-  "dependencies": {
-    "@types/node": "^10.3.2"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^12.7.11"
   }
 }

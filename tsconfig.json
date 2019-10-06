@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        // "module": "esnext",
-        "lib": ["esnext"],
-        "target": "es5",
-        "downlevelIteration": true,
+        "module": "commonjs",
+        "lib": [ "esnext" ],
+        "target": "es2017",
+        "downlevelIteration": false,
         "noImplicitAny": false,
         "removeComments": false,
         "preserveConstEnums": true,
