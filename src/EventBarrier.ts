@@ -37,17 +37,20 @@ export class EventBarrier {
    */
   notify(event: string, value?: any) {
     this.emitter.emit(event, value)
+    return this
   }
 
   /**
    * Abort waiters that are waiting for an event, causing `waitFor` to reject
    * @param event The event that the waiters are still waiting for
+   * @param err Error as rejection reason
    */
-  abort(event: string) {
+  abort(event: string, err?: Error | string | number) {
     const { emitter, waiters } = this
+    if(!err) err = new AbortionError
     if(waiters.has(event)) {
       const { resolvers, rejectors, tHandles } = waiters.get(event)!
-      rejectors.forEach(rej => rej(new AbortionError))
+      rejectors.forEach(rej => rej(err))
       rejectors.splice(0)
       resolvers.splice(0)
       tHandles.forEach(clearTimeout)
@@ -55,6 +58,16 @@ export class EventBarrier {
       waiters.delete(event)
       emitter.removeAllListeners(event)
     }
+    return this
+  }
+
+  /**
+   * Abort all waiters on all events
+   * @param err Error as rejection reason
+   */
+  abortAll(err?: Error | string | number) {
+    this.waiters.forEach((_, key) => this.abort(key, err))
+    return this
   }
 
   /**
