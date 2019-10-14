@@ -2,12 +2,18 @@ import { EventEmitter } from 'events'
 
 
 interface Waiter {
-  resolvers: ((value: any) => void)[],
-  tHandles: ReturnType<typeof setTimeout>[]
+  readonly resolvers: ((value: any) => void)[]
+  readonly rejectors: ((err: Error | string | number) => void)[]
+  readonly tHandles: ReturnType<typeof setTimeout>[]
 }
 
 export class TimeoutError extends Error {
   name = 'TimeoutError'
+  source = 'EventBarrier'
+}
+
+export class AbortionError extends Error {
+  name = 'AbortionError'
   source = 'EventBarrier'
 }
 
@@ -34,6 +40,24 @@ export class EventBarrier {
   }
 
   /**
+   * Abort waiters that are waiting for an event, causing `waitFor` to reject
+   * @param event The event that the waiters are still waiting for
+   */
+  abort(event: string) {
+    const { emitter, waiters } = this
+    if(waiters.has(event)) {
+      const { resolvers, rejectors, tHandles } = waiters.get(event)!
+      rejectors.forEach(rej => rej(new AbortionError))
+      rejectors.splice(0)
+      resolvers.splice(0)
+      tHandles.forEach(clearTimeout)
+      tHandles.splice(0)
+      waiters.delete(event)
+      emitter.removeAllListeners(event)
+    }
+  }
+
+  /**
    * Wait for specific event to happen
    * @param event Event to wait for
    * @param timeout If specified, a `TimeoutError` will be thrown after that
@@ -41,21 +65,30 @@ export class EventBarrier {
    */
   waitFor(event: string, timeout?: number) {
     return new Promise<any>((res, rej) => {
-      const { resolvers, tHandles } = this.getOrCreateWaiter(event)
+      const { resolvers, rejectors, tHandles } = this.getOrCreateWaiter(event)
       const { emitter } = this
       const timeoutError = new TimeoutError
       resolvers.push(res)
+      rejectors.push(rej)
       const handler = (value: any) => {
         for(const t of tHandles) clearTimeout(t)
         tHandles.splice(0)
         for(const resolve of resolvers) resolve(value)
         resolvers.splice(0)
+        rejectors.splice(0)
+        this.waiters.delete(event)
+        emitter.removeAllListeners(event)
       }
       if(emitter.listeners(event).length == 0) emitter.on(event, handler)
       if(timeout != undefined) {
         const t = setTimeout(() => {
           tHandles.splice(tHandles.indexOf(t), 1)
           resolvers.splice(resolvers.indexOf(res), 1)  // Do not resolve since already timeout
+          rejectors.splice(rejectors.indexOf(rej), 1)
+          if(resolvers.length == 0) {
+            this.waiters.delete(event)
+            emitter.removeAllListeners(event)
+          }
           rej(timeoutError)
         }, timeout)
         tHandles.push(t)
@@ -70,6 +103,7 @@ export class EventBarrier {
     } else {
       const waiter: Waiter = {
         resolvers: [],
+        rejectors: [],
         tHandles: []
       }
       waiters.set(event, waiter)
