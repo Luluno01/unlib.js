@@ -34,9 +34,11 @@ export class EventBarrier {
    * @param event Event that just happened
    * @param value Event payload value (as the second argument of
    * `EventEmitter.prototype.emit`)
+   * @param count The number of waiters to be waked up. Leave `undefined` to
+   * wake up all of them
    */
-  notify(event: string, value?: any) {
-    this.emitter.emit(event, value)
+  notify(event: string, value?: any, count?: number) {
+    this.emitter.emit(event, value, count)
     return this
   }
 
@@ -83,14 +85,15 @@ export class EventBarrier {
       const timeoutError = new TimeoutError
       resolvers.push(res)
       rejectors.push(rej)
-      const handler = (value: any) => {
-        for(const t of tHandles) clearTimeout(t)
-        tHandles.splice(0)
-        for(const resolve of resolvers) resolve(value)
-        resolvers.splice(0)
-        rejectors.splice(0)
-        this.waiters.delete(event)
-        emitter.removeAllListeners(event)
+      const handler = (value: any, count?: number) => {
+        if(count == undefined) count = resolvers.length
+        tHandles.splice(0, count).forEach(clearTimeout)
+        resolvers.splice(0, count).forEach(resolve => resolve(value))
+        rejectors.splice(0, count)
+        if(resolvers.length == 0) {
+          this.waiters.delete(event)
+          emitter.removeAllListeners(event)
+        }
       }
       if(emitter.listeners(event).length == 0) emitter.on(event, handler)
       if(timeout != undefined) {
