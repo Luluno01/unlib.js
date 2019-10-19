@@ -10,11 +10,21 @@ interface Waiter {
 export class TimeoutError extends Error {
   name = 'TimeoutError'
   source = 'EventBarrier'
+  event?: string
+  constructor(msg?: string, event?: string) {
+    super(msg)
+    if(event) this.event = event
+  }
 }
 
 export class AbortionError extends Error {
   name = 'AbortionError'
   source = 'EventBarrier'
+  event?: string
+  constructor(msg?: string, event?: string) {
+    super(msg)
+    if(event) this.event = event
+  }
 }
 
 /**
@@ -49,7 +59,7 @@ export class EventBarrier {
    */
   abort(event: string, err?: Error | string | number) {
     const { emitter, waiters } = this
-    if(!err) err = new AbortionError
+    if(!err) err = new AbortionError(undefined, event)
     if(waiters.has(event)) {
       const { resolvers, rejectors, tHandles } = waiters.get(event)!
       rejectors.forEach(rej => rej(err))
@@ -82,7 +92,7 @@ export class EventBarrier {
     return new Promise<any>((res, rej) => {
       const { resolvers, rejectors, tHandles } = this.getOrCreateWaiter(event)
       const { emitter } = this
-      const timeoutError = new TimeoutError
+      const timeoutError = new TimeoutError(undefined, event)
       resolvers.push(res)
       rejectors.push(rej)
       const handler = (value: any, count?: number) => {
