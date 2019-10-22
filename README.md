@@ -28,7 +28,9 @@ Untitled's personal JavaScript library. Still under construction.
     - [`Object`](#object)
     - [`Math`](#math)
     - [`TaskQueue`](#taskqueue)
-    - [`EventBarrier`](#eventbarrier)
+    - [`Sync`](#sync)
+      - [`EventBarrier`](#eventbarrier)
+      - [`Lock`](#lock)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -170,9 +172,17 @@ Factorial, permutation, combination calculation, sum, mean, variance calculation
 
 Task queue with max number of concurrent pending tasks limit.
 
-### `EventBarrier`
+### `Sync`
+
+Event-synchronization mechanisms.
+
+#### `EventBarrier`
 
 Event barrier that brings `notify` and `waitFor` primitives to you.
+
+#### `Lock`
+
+Lock / Binary semaphore with optional maximum queue size constraint.
 
 ### `Constants`
 

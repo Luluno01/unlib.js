@@ -9,7 +9,7 @@ interface Waiter {
 
 export class TimeoutError extends Error {
   name = 'TimeoutError'
-  source = 'EventBarrier'
+  source = 'Sync.EventBarrier'
   event?: string
   constructor(msg?: string, event?: string) {
     super(msg)
@@ -19,7 +19,7 @@ export class TimeoutError extends Error {
 
 export class AbortionError extends Error {
   name = 'AbortionError'
-  source = 'EventBarrier'
+  source = 'Sync.EventBarrier'
   event?: string
   constructor(msg?: string, event?: string) {
     super(msg)

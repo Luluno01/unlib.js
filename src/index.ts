@@ -10,7 +10,7 @@ import * as _JSON from './JSON'
 import Obj from './Obj'
 import * as _Math from './Math'
 import _TaskQueue from './TaskQueue'
-import _EventBarrier from './EventBarrier'
+import * as _Sync from './Sync'
 
 export const Random = _Random
 export const Generators = _Generators
@@ -23,4 +23,4 @@ export const JSON = _JSON
 export const Object = Obj as EnhancedObjectConstructor
 export const Math = _Math
 export const TaskQueue = _TaskQueue
-export const EventBarrier = _EventBarrier
+export const Sync = _Sync
