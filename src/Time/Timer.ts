@@ -17,7 +17,7 @@ export class Timer {
     }
     this.callback(new Date())
   }
-  private _onStop: ((time?: Date, ...args: any[]) => any | null)
+  private _onStop: ((time: Date) => void)
 
   /**
    * @description Constructor of `Timer`.
@@ -65,9 +65,9 @@ export class Timer {
 
   /**
    * @description Get `onStop` handler.
-   * @returns {(time?: Date, ...args) => any | null} A handler function will be called when the timer stops.
+   * @returns {(time: Date) => void} A handler function will be called when the timer stops.
    */
-  get onStop(): (time?: Date, ...args) => any | null {
+  get onStop(): (time: Date) => void {
     return this._onStop
   }
 
@@ -97,7 +97,8 @@ export class Timer {
    * @param event The event to listen to.
    * @param callback The handler function for the event `event`.
    */
-  on(event: string, callback: (time?: Date, ...args) => any): Timer {
+  on(event: 'stop', callback: (time: Date) => void): Timer
+  on(event: string, callback: (time?: Date, ...args: any) => any): Timer {
     switch(event) {
       case 'stop': {
         this._onStop = callback
@@ -108,3 +109,5 @@ export class Timer {
     return this
   }
 }
+
+export default Timer

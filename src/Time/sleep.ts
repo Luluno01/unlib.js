@@ -8,3 +8,5 @@ export function sleep(delay: number, ...args: any[]): Promise<any[]> {
     setTimeout(resolve, delay, args)
   })
 }
+
+export default sleep
