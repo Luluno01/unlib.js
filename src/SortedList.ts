@@ -5,6 +5,9 @@ export type Comparer<T> = (a: T, b: T) => number
  */
 export class SortedList<T=number> {
   readonly arr: T[]
+  get length() {
+    return this.arr.length
+  }
   readonly compare!: Comparer<T>
   constructor(arr: T[], compare: Comparer<T> = (a, b) => (a as any) - (b as any)) {
     // `arr` must be sorted
