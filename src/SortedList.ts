@@ -33,7 +33,7 @@ export class SortedList<T=number> {
     const { arr, compare } = this
     if(startIndex < 0) startIndex = 0
     else if(startIndex > 0) {
-      if(compare(arr[startIndex - 1], elem) < 0) startIndex = 0
+      if(compare(elem, arr[startIndex - 1]) < 0) startIndex = 0
     }
     let i = startIndex
     for(const _elem of i ? arr.slice(i) : arr) {
@@ -71,7 +71,7 @@ export class SortedList<T=number> {
   public alter(i: number, func: (elem: T) => void) {
     func(this.arr[i])
     const elem = this.delete(i)
-    return this.add(elem)
+    return this.add(elem, i - 1)
   }
 }
 
