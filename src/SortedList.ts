@@ -73,6 +73,10 @@ export class SortedList<T=number> {
     const elem = this.delete(i)
     return this.add(elem, i - 1)
   }
+
+  [Symbol.iterator]() {
+    return this.arr[Symbol.iterator]()
+  }
 }
 
 export default SortedList
