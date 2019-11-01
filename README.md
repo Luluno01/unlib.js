@@ -31,6 +31,7 @@ Untitled's personal JavaScript library. Still under construction.
     - [`Sync`](#sync)
       - [`EventBarrier`](#eventbarrier)
       - [`Lock`](#lock)
+    - [`SortedList`](#sortedlist)
     - [`Constants`](#constants)
   - [TODO](#todo)
 
@@ -183,6 +184,10 @@ Event barrier that brings `notify` and `waitFor` primitives to you.
 #### `Lock`
 
 Lock / Binary semaphore with optional maximum queue size constraint.
+
+### `SortedList`
+
+Sorted list that maintains an always sorted list for you.
 
 ### `Constants`
 
