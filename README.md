@@ -31,6 +31,7 @@ Untitled's personal JavaScript library. Still under construction.
     - [Sync](#sync)
       - [EventBarrier](#eventbarrier)
       - [Lock](#lock)
+      - [Semaphore](#semaphore)
     - [SortedList](#sortedlist)
     - [AsyncStreamReader](#asyncstreamreader)
     - [Constants](#constants)
@@ -185,6 +186,10 @@ Event barrier that brings `notify` and `waitFor` primitives to you.
 #### `Lock`
 
 Lock / Binary semaphore with optional maximum queue size constraint.
+
+#### `Semaphore`
+
+Generic and one-consumer counted semaphore.
 
 ### `SortedList`
 

@@ -1,9 +1,12 @@
 import { EventBarrier } from './EventBarrier'
 import { Lock } from './Lock'
+import { Semaphore, CountedSemaphore } from './Semaphore'
 
 var Sync = {
   EventBarrier,
-  Lock
+  Lock,
+  Semaphore,
+  CountedSemaphore
 }
 
 export default Sync
