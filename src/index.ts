@@ -12,6 +12,7 @@ import * as _Math from './Math'
 import _TaskQueue from './TaskQueue'
 import * as _Sync from './Sync'
 import _SortedList from './SortedList'
+import _AsyncStreamReader from './AsyncStreamReader'
 
 export const Random = _Random
 export const Generators = _Generators
@@ -26,3 +27,4 @@ export const Math = _Math
 export const TaskQueue = _TaskQueue
 export const Sync = _Sync
 export const SortedList = _SortedList
+export const AsyncStreamReader = _AsyncStreamReader

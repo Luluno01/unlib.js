@@ -14,25 +14,26 @@ Untitled's personal JavaScript library. Still under construction.
     - [TypeScript/ES6](#typescriptes6)
     - [Import a sub-module](#import-a-sub-module)
   - [Features (extending)](#features-extending)
-    - [`Random`](#random)
-    - [`Generators`](#generators)
-    - [`Binary`](#binary)
-    - [`Time`](#time)
-      - [`Timer`](#timer)
-      - [`sleep`](#sleep)
-      - [`timeoutify`](#timeoutify)
-    - [`Promise`](#promise)
-    - [`fs`](#fs)
-      - [`mkdirs`](#mkdirs)
-      - [`rm`](#rm)
-    - [`Object`](#object)
-    - [`Math`](#math)
-    - [`TaskQueue`](#taskqueue)
-    - [`Sync`](#sync)
-      - [`EventBarrier`](#eventbarrier)
-      - [`Lock`](#lock)
-    - [`SortedList`](#sortedlist)
-    - [`Constants`](#constants)
+    - [Random](#random)
+    - [Generators](#generators)
+    - [Binary](#binary)
+    - [Time](#time)
+      - [Timer](#timer)
+      - [sleep](#sleep)
+      - [timeoutify](#timeoutify)
+    - [Promise](#promise)
+    - [fs](#fs)
+      - [mkdirs](#mkdirs)
+      - [rm](#rm)
+    - [Object](#object)
+    - [Math](#math)
+    - [TaskQueue](#taskqueue)
+    - [Sync](#sync)
+      - [EventBarrier](#eventbarrier)
+      - [Lock](#lock)
+    - [SortedList](#sortedlist)
+    - [AsyncStreamReader](#asyncstreamreader)
+    - [Constants](#constants)
   - [TODO](#todo)
 
 ## Description
@@ -113,7 +114,7 @@ import Random from './unlib.js/build/Random'
 
 ## Features (extending)
 
-This library has only 10 types of functionalities currently. I will implement some more ~~wheels~~ functionalities once I have to deal with some boring and repeated works.
+This library has only 13 types of functionalities currently. I will implement some more ~~wheels~~ functionalities once I have to deal with some boring and repeated works.
 
 Somehow, I can not provide detailed documentation for now. If you are interested in this library and require more details, feel free to open an issue to let me know which part of this library makes you confused or whatever you want to know about this repository.
 
@@ -188,6 +189,10 @@ Lock / Binary semaphore with optional maximum queue size constraint.
 ### `SortedList`
 
 Sorted list that maintains an always sorted list for you.
+
+### `AsyncStreamReader`
+
+Asynchronous stream reader (uses `async-await` for reading data).
 
 ### `Constants`
 
