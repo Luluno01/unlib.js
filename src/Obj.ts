@@ -1,4 +1,3 @@
-/// <reference path="./Obj.d.ts" />
 import * as assert from 'assert'
 
 
