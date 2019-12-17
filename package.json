@@ -1,6 +1,6 @@
 {
   "name": "unlib.js",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A general library includes Random, etc.",
   "main": "build/index.js",
   "scripts": {
