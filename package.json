@@ -1,6 +1,6 @@
 {
   "name": "unlib.js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A general library includes Random, etc.",
   "main": "build/index.js",
   "scripts": {
@@ -15,12 +15,13 @@
     "promise",
     "object",
     "generator",
-    "JSON"
+    "JSON",
+    "sync"
   ],
   "author": "Untitled",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^12.7.11"
+    "@types/node": "^13.5.0"
   }
 }

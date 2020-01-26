@@ -218,3 +218,76 @@ export function *levelWalk(obj: any, path: (Symbol | string | number)[] = []): I
     }
   }
 }
+
+/**
+ * Enumerate elements and their corresponding indexes of an iterable
+ * @param it Iterable to be enumerate
+ */
+export function *enumerate<T>(it: Iterable<T>): IterableIterator<[ number, T ]> {
+  let i = 0
+  for(const elem of it) yield [ i++, elem ]
+}
+
+/**
+ * Nested iterable
+ */
+export type NestedIterable<T> = Iterable<NestedIterable<T> | T>
+
+/**
+ * Flatten an iterable
+ * @param its Iterable to be flattened
+ * @param depth Optional. Defaults to `Infinity`. Max depth of recursion
+ */
+export function flat<T>(it: Iterable<T>, depth: 1): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<T>>, depth: 2): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<Iterable<T>>>, depth: 3): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<Iterable<Iterable<T>>>>, depth: 4): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<Iterable<Iterable<Iterable<T>>>>>, depth: 5): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<Iterable<Iterable<Iterable<Iterable<T>>>>>>, depth: 6): IterableIterator<T>
+export function flat<T>(it: Iterable<Iterable<Iterable<Iterable<Iterable<Iterable<Iterable<T>>>>>>>, depth: 7): IterableIterator<T>
+export function flat<T>(it: NestedIterable<T>, depth?: number): NestedIterable<T>
+export function *flat<T>(it: NestedIterable<T>, depth: number = Infinity): NestedIterable<T> {
+  if(depth <= 0) {
+    yield *it
+  } else {
+    for(const elem of it) {
+      if(elem[Symbol.iterator]) yield *flat(elem as NestedIterable<T>, depth - 1)
+      else yield elem as T
+    }
+  }
+}
+
+/**
+ * Map an iterable
+ * @param it Iterable to map
+ * @param callbackfn Callback function to be called on every element
+ */
+export function *map<T, U>(it: Iterable<T>, callbackfn: (value: T, index: number) => U): IterableIterator<U> {
+  for(const [ i, elem ] of enumerate(it)) {
+    yield callbackfn(elem, i)
+  }
+}
+
+/**
+ * Zip multiple iterables
+ * @param its Iterables to zip
+ */
+export function zip<T1>(it1: T1): IterableIterator<[ T1 ]>
+export function zip<T1, T2>(it1: T1, it2: T2): IterableIterator<[ T1, T2 ]>
+export function zip<T1, T2, T3>(it1: T1, it2: T2, it3: T3): IterableIterator<[ T1, T2, T3 ]>
+export function zip<T1, T2, T3, T4>(it1: T1, it2: T2, it3: T3, it4: T4): IterableIterator<[ T1, T2, T3, T4 ]>
+export function zip<T1, T2, T3, T4, T5>(it1: T1, it2: T2, it3: T3, it4: T4, it5: T5): IterableIterator<[ T1, T2, T3, T4, T5 ]>
+export function *zip(...its: Iterable<any>[]): IterableIterator<any[]> {
+  const _its = its.map(it => it[Symbol.iterator]())
+  while(true) {
+    let allDone = true
+    const res: any[] = new Array(its.length)
+    for(const [ i, it ] of enumerate(_its)) {
+      const { value, done } = it.next()
+      if(!done) allDone = false
+      res[i] = value
+    }
+    if(allDone) return
+    yield res
+  }
+}
