@@ -272,11 +272,11 @@ export function *map<T, U>(it: Iterable<T>, callbackfn: (value: T, index: number
  * Zip multiple iterables
  * @param its Iterables to zip
  */
-export function zip<T1>(it1: T1): IterableIterator<[ T1 ]>
-export function zip<T1, T2>(it1: T1, it2: T2): IterableIterator<[ T1, T2 ]>
-export function zip<T1, T2, T3>(it1: T1, it2: T2, it3: T3): IterableIterator<[ T1, T2, T3 ]>
-export function zip<T1, T2, T3, T4>(it1: T1, it2: T2, it3: T3, it4: T4): IterableIterator<[ T1, T2, T3, T4 ]>
-export function zip<T1, T2, T3, T4, T5>(it1: T1, it2: T2, it3: T3, it4: T4, it5: T5): IterableIterator<[ T1, T2, T3, T4, T5 ]>
+export function zip<T1>(it1: Iterable<T1>): IterableIterator<[ T1 ]>
+export function zip<T1, T2>(it1: Iterable<T1>, it2: Iterable<T2>): IterableIterator<[ T1, T2 ]>
+export function zip<T1, T2, T3>(it1: Iterable<T1>, it2: Iterable<T2>, it3: Iterable<T3>): IterableIterator<[ T1, T2, T3 ]>
+export function zip<T1, T2, T3, T4>(it1: Iterable<T1>, it2: Iterable<T2>, it3: Iterable<T3>, it4: Iterable<T4>): IterableIterator<[ T1, T2, T3, T4 ]>
+export function zip<T1, T2, T3, T4, T5>(it1: Iterable<T1>, it2: Iterable<T2>, it3: Iterable<T3>, it4: Iterable<T4>, it5: Iterable<T5>): IterableIterator<[ T1, T2, T3, T4, T5 ]>
 export function *zip(...its: Iterable<any>[]): IterableIterator<any[]> {
   const _its = its.map(it => it[Symbol.iterator]())
   while(true) {
