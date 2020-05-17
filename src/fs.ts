@@ -3,7 +3,6 @@ import * as _fs from 'fs'
 import * as path from 'path'
 import * as util from 'util'
 
-type WriteFileOption = { encoding?: string | null; mode?: number | string; flag?: string; } | string | null
 type ReadFileOption = { encoding?: null; flag?: string; } | string | null
 type JSONParseReviver = ((key: any, value: any) => any)
 type JSONStringifyReplacerFunction = (key: string, value: any) => any
@@ -126,7 +125,7 @@ export interface fs {
    * @returns {(value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>} A function that writes stringified `value` and returns a promise object.
    * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
    */
-  dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>
+  dumpJSON(path: _fs.PathLike | number, options?: _fs.WriteFileOptions): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>
 
   /**
    * @description Load from a JSON string file into an object
@@ -296,7 +295,7 @@ export async function rm(filename: string): Promise<void> {
  * @returns {(value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void>} A function that writes stringified `value` and returns a promise object.
  * Returned function receives a `value` parameter and a `replacer` parameter, which are exactly the same as `JSON.stringify`'s.
  */
-export function dumpJSON(path: _fs.PathLike | number, options?: WriteFileOption): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void> {
+export function dumpJSON(path: _fs.PathLike | number, options?: _fs.WriteFileOptions): (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number) => Promise<void> {
   return async (value: any, replacer: JSONStringifyReplacerFunction | JSONStringifyReplacerArray, space?: string | number): Promise<void> => {
     const str = JSON.stringify(value, replacer as any, space)
     await pfs.writeFile(path, str, options)
