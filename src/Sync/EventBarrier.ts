@@ -32,11 +32,14 @@ export class AbortionError extends Error {
  * 
  * Note: do not reuse the instance to avoid event leak
  */
-export class EventBarrier {
+export class EventBarrier extends EventEmitter {
   private waiters: Map<
     /* event */ string,
     /* resolvers and timeout handles */ Waiter
   > = new Map
+  /**
+   * Internal emitter
+   */
   private emitter = new EventEmitter
 
   /**
@@ -48,6 +51,7 @@ export class EventBarrier {
    * wake up all of them
    */
   notify(event: string, value?: any, count?: number) {
+    this.emit(event, value)
     this.emitter.emit(event, value, count)
     return this
   }
