@@ -38,16 +38,27 @@ export class SortedList<T=number> {
     else if(startIndex > 0) {
       if(compare(elem, arr[startIndex - 1]) < 0) startIndex = 0
     }
-    let i = startIndex
-    for(const _elem of i ? arr.slice(i) : arr) {
-      if(compare(elem, _elem) < 0) {
-        arr.splice(i, 0, elem)
-        return i
+    let lo = startIndex
+    let hi = arr.length - 1
+    let middle = Math.floor((lo + hi) / 2)
+    while (lo <= hi) {
+      const cmpResult = compare(arr[middle], elem)
+      if (cmpResult < 0) {
+        // The element in the middle is smaller than the element to add
+        lo = middle + 1
+      } else if (cmpResult == 0) {
+        // The element in the middle is equal to the element to add
+        arr.splice(middle, 0, elem)
+        return middle
+      } else {
+        // The element in the middle is larger than the element to add
+        hi = middle - 1
       }
-      i++
+      middle = Math.floor((hi + lo) / 2)
     }
-    arr.push(elem)
-    return arr.length - 1
+    // hi < lo
+    arr.splice(lo, 0, elem)
+    return lo
   }
 
   /**
