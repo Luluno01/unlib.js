@@ -254,7 +254,7 @@ function getExport() {
     static assignAll<T, U>(dst: T, src: U): T & U {
       if(!src) return dst as any
       assert(dst instanceof Object || typeof dst == 'object')
-      return Object.defineProperties(dst, EnhancedObject.getPropertyDescriptors(src))
+      return Object.defineProperties(dst as any, EnhancedObject.getPropertyDescriptors(src))
     }
 
     /**
@@ -267,7 +267,7 @@ function getExport() {
     static assignEnumerable<T, U>(dst: T, src: U): T & U {
       if(!src) return dst as any
       assert(dst instanceof Object || typeof dst == 'object')
-      return Object.defineProperties(dst, EnhancedObject.getEnumerablePropertyDescriptors(src))
+      return Object.defineProperties(dst as any, EnhancedObject.getEnumerablePropertyDescriptors(src))
     }
 
     /**
@@ -280,7 +280,7 @@ function getExport() {
     static assignOwnProperties<T, U>(dst: T, src: U): T & U {
       if(!src) return dst as any
       assert(dst instanceof Object || typeof dst == 'object')
-      return Object.defineProperties(dst, EnhancedObject.getOwnPropertyDescriptors(src))
+      return Object.defineProperties(dst as any, EnhancedObject.getOwnPropertyDescriptors(src))
     }
 
     static assignEnumerableOwnProperties: typeof Object.assign = Object.assign
